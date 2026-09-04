@@ -1,0 +1,32 @@
+name: Enlazar Mision III
+on:
+  push:
+    paths:
+      - '.github/workflows/link-mission3.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Actualizar campamento
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          old="const completed1=campaign.completed.includes(1);document.getElementById('node1').classList.toggle('complete',completed1);document.getElementById('node2').classList.toggle('locked',!completed1);document.getElementById('missionHubCard').innerHTML=completed1?"
+          new="const completed1=campaign.completed.includes(1),completed2=campaign.completed.includes(2);document.getElementById('node1').classList.toggle('complete',completed1);document.getElementById('node2').classList.toggle('locked',!completed1);document.getElementById('node2').classList.toggle('complete',completed2);document.getElementById('missionHubCard').innerHTML=completed2?'<p class=\"mission-number\">MISIÓN II · COMPLETADA</p><h3>El Puente de los Ahorcados</h3><p>El paso hacia Kappelburg ha quedado abierto.</p><div style=\"margin-top:18px\"><p class=\"mission-number\">MISIÓN III · DISPONIBLE</p><h3>Los Patios de Kappelburg</h3><p>La compañía alcanza los patios interiores. Encontrad la entrada auténtica a las criptas y destruid a la Estatua Animada.</p><p><b>4 héroes · Nivel recomendado 3</b></p><button class=\"hub-main-action\" onclick=\"location.href=&quot;mision3.html&quot;\">⚔ COMENZAR / CONTINUAR MISIÓN III</button></div>':completed1?"
+          if old not in s:
+              raise SystemExit('No se encontró el punto seguro de inserción')
+          p.write_text(s.replace(old,new,1))
+          PY
+      - name: Guardar cambio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Enlazar Misión III desde el campamento"
+          git push
