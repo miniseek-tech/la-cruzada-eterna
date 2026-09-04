@@ -1,0 +1,31 @@
+name: Fix mission II link
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-mission2-link.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          old="<div class=\"locked-mission\"><p class=\"mission-number\">MISIÓN II · PRÓXIMAMENTE</p><p>La siguiente misión quedará disponible cuando la incorporemos a la aplicación.</p></div>"
+          new="<div style=\"margin-top:18px\"><p class=\"mission-number\">MISIÓN II · DISPONIBLE</p><h3>El Puente de los Ahorcados</h3><p>La niebla cubre el Drakwasser. Al otro lado del puente aguarda el Rey Tumulario, último guardián del paso hacia Kappelburg.</p><p><b>4 héroes · Nivel recomendado 2 · 60–90 min</b></p><button class=\"hub-main-action\" onclick=\"location.href='mision2.html'\">⚔ COMENZAR / CONTINUAR MISIÓN II</button></div>"
+          if old not in s:
+              raise SystemExit('No se encontró el bloque antiguo de Misión II')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name "miniseek-tech"
+          git config user.email "miniseek@gmail.com"
+          git add index.html
+          git commit -m "Mostrar Misión II en el campamento"
+          git push
