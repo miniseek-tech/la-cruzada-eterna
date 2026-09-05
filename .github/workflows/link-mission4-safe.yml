@@ -1,0 +1,33 @@
+name: Corregir enlace Mision IV
+on:
+  push:
+    paths:
+      - '.github/workflows/link-mission4-safe.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Corregir acceso a Mision IV
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          marker="const hub=document.getElementById('missionHubCard');"
+          if marker not in s:
+              raise SystemExit('No se encontro missionHubCard')
+          block="""const hub=document.getElementById('missionHubCard');if((campaign.completed||[]).includes(3)||Number(campaign.mission)>=4){hub.innerHTML='<small>MISIÓN III · COMPLETADA</small><h3>Los Patios de Kappelburg</h3><p>El camino hacia las profundidades de Kappelburg está abierto.</p><div class=\"divider\"><span>◆</span></div><small>MISIÓN IV · DISPONIBLE</small><h3>Las Criptas de la Sangre Negra</h3><p>Destruid los Tres Sellos de Sangre Negra antes de que el ritual concluya.</p><p><b>4 héroes</b></p><button class=\"hub-main-action\" onclick=\"location.href=&quot;mision4.html&quot;\">⚔ COMENZAR / CONTINUAR MISIÓN IV</button>';return;}"""
+          s=s.replace(marker,block,1)
+          s=s.replace('<p><b>4 héroes · Nivel recomendado 3</b></p>','<p><b>4 héroes</b></p>')
+          p.write_text(s)
+          PY
+      - name: Guardar cambio
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html
+          git commit -m 'Corregir acceso a Misión IV desde campamento'
+          git push
