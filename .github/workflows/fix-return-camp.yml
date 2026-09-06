@@ -1,0 +1,45 @@
+name: Corregir regreso al campamento
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-return-camp.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Corregir navegación Misión III a campamento
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('mision3.html')
+          s=p.read_text()
+          old="<button onclick=\"location.href='index.html'\">← VOLVER AL CAMPAMENTO</button>"
+          new="<button onclick=\"location.href='index.html?camp=1'\">← VOLVER AL CAMPAMENTO</button>"
+          if old not in s:
+              raise SystemExit('No se encontró el botón de regreso de Misión III')
+          p.write_text(s.replace(old,new,1))
+
+          p=Path('index.html')
+          s=p.read_text()
+          marker='</body>'
+          hook="<script>if(new URLSearchParams(location.search).get('camp')==='1'){if(localStorage.getItem('cruzadaCampaign')){showScreen('campaign')}else{showScreen('menu')}history.replaceState(null,'',location.pathname);}</script>"
+          if hook not in s:
+              if marker not in s:
+                  raise SystemExit('No se encontró </body> en index.html')
+              s=s.replace(marker,hook+marker,1)
+          p.write_text(s)
+          PY
+      - name: Comprobar cambios
+        run: |
+          grep -F "index.html?camp=1" mision3.html
+          grep -F "get('camp')==='1'" index.html
+      - name: Guardar cambios
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mision3.html index.html
+          git commit -m "Volver al campamento desde Misión III"
+          git push
