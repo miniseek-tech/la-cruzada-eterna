@@ -1,0 +1,39 @@
+name: Corregir resultados Mision IV
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-mission4-results.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Corregir Mision IV
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('mision4.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('<div class="card"><small>✦ RECOMPENSAS DE VICTORIA</small><p>Cada héroe obtiene <b>30 Coronas</b> y <b>1 tirada en la tabla D66</b>. Se conservan la Estaca Bendita y el Pergamino Sagrado si fueron encontrados. <b>No se obtiene experiencia.</b></p></div>', '<div id="victoryRewards" class="card" hidden><small>✦ RECOMPENSAS DE VICTORIA</small><p>Cada héroe obtiene <b>30 Coronas</b> y <b>1 tirada en la tabla D66</b>. Se conservan la Estaca Bendita y el Pergamino Sagrado si fueron encontrados. <b>No se obtiene experiencia.</b></p></div>')
+          old="function showResult(){const e=document.getElementById('resolution');e.hidden=false;if(state.outcome==='defeat')e.innerHTML='<h3 class=\"defeat\">☠ DERROTA</h3><p>La misión no queda bloqueada. Corrige el estado de la partida y vuelve a intentarlo.</p>';else e.innerHTML='<h3 class=\"victory\">⚔ VICTORIA</h3><p>Los tres sellos han sido destruidos y los héroes han alcanzado la salida. <b>Misión V desbloqueada.</b></p>'}"
+          new="function showResult(){const e=document.getElementById('resolution'),r=document.getElementById('victoryRewards');e.hidden=false;if(state.outcome==='defeat'){if(r)r.hidden=true;e.innerHTML='<h3 class=\"defeat\">☠ DERROTA</h3><p>La misión no queda bloqueada. Corrige el estado de la partida y vuelve a intentarlo.</p>';}else{if(r)r.hidden=false;const absolute=!!(state.hunter&&state.stake&&state.scroll&&state.explore);e.innerHTML=absolute?'<h3 class=\"victory\">✦ VICTORIA ABSOLUTA</h3><p>Los tres sellos han sido destruidos, los héroes han alcanzado la salida y se han completado todos los objetivos secundarios. <b>Misión V desbloqueada.</b></p>':'<h3 class=\"victory\">⚔ VICTORIA</h3><p>Los tres sellos han sido destruidos y los héroes han alcanzado la salida. <b>Misión V desbloqueada.</b></p>';}}"
+          if old not in s:
+              raise SystemExit('No se encontro showResult esperado')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Verificar
+        run: |
+          grep -q 'id="victoryRewards"' mision4.html
+          grep -q 'VICTORIA ABSOLUTA' mision4.html
+          grep -q "if(r)r.hidden=true" mision4.html
+      - name: Publicar
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add mision4.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Corregir derrota y victoria absoluta de Mision IV'
+          git push
