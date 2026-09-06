@@ -16,25 +16,18 @@ jobs:
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          old="""const c=campaign;
-              if(!c) return;
-              const completed3=(c.completed||[]).includes(3)||Number(c.mission)>=4;"""
-          new="""campaign=JSON.parse(localStorage.getItem('cruzadaCampaign')||'null');
-              const c=campaign;
-              if(!c) return;
-              const m3=JSON.parse(localStorage.getItem('cruzadaMission3')||'null');
-              const completed3=(c.completed||[]).includes(3)||Number(c.mission)>=4||(m3&&m3.resolved&&m3.victory);"""
+          old="""const completed3=(c.completed||[]).includes(3)||Number(c.mission)>=4||(m3&&m3.resolved&&m3.victory);"""
+          new="""const completed3=(c.completed||[]).includes(3)||Number(c.mission)>=4||(m3&&m3.resolved&&m3.outcome==='victory');"""
           if new in s:
               raise SystemExit(0)
           if old not in s:
-              raise SystemExit('No se encontro el hotfix actual')
+              raise SystemExit('No se encontro la condicion antigua')
           s=s.replace(old,new,1)
           p.write_text(s,encoding='utf-8')
           PY
       - name: Verificar
         run: |
-          grep -q "localStorage.getItem('cruzadaCampaign')" index.html
-          grep -q "localStorage.getItem('cruzadaMission3')" index.html
+          grep -q "m3.outcome==='victory'" index.html
           grep -q 'MISIÓN IV · DISPONIBLE' index.html
           grep -q 'mision4.html' index.html
       - name: Publicar
@@ -43,5 +36,5 @@ jobs:
           git config user.email github-actions@github.com
           git add index.html
           git diff --cached --quiet && exit 0
-          git commit -m 'Leer progreso real y desbloquear Mision IV'
+          git commit -m 'Corregir estado de victoria y desbloquear Mision IV'
           git push
