@@ -1,0 +1,26 @@
+name: Recuperar campamento estable
+on:
+  push:
+    paths:
+      - '.github/workflows/recover-index.yml'
+permissions:
+  contents: write
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restaurar index estable
+        run: |
+          git checkout 13f0ba890cea9a5a99f9f6b73d653b18e091590c -- index.html
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Recuperar campamento estable tras Misión III"
+            git push
+          else
+            echo "index.html ya coincide con la versión estable"
+          fi
