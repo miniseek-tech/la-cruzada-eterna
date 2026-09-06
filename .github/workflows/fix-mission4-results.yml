@@ -16,12 +16,15 @@ jobs:
           from pathlib import Path
           p=Path('mision4.html')
           s=p.read_text(encoding='utf-8')
-          s=s.replace('<div class="card"><small>✦ RECOMPENSAS DE VICTORIA</small><p>Cada héroe obtiene <b>30 Coronas</b> y <b>1 tirada en la tabla D66</b>. Se conservan la Estaca Bendita y el Pergamino Sagrado si fueron encontrados. <b>No se obtiene experiencia.</b></p></div>', '<div id="victoryRewards" class="card" hidden><small>✦ RECOMPENSAS DE VICTORIA</small><p>Cada héroe obtiene <b>30 Coronas</b> y <b>1 tirada en la tabla D66</b>. Se conservan la Estaca Bendita y el Pergamino Sagrado si fueron encontrados. <b>No se obtiene experiencia.</b></p></div>')
-          old="function showResult(){const e=document.getElementById('resolution');e.hidden=false;if(state.outcome==='defeat')e.innerHTML='<h3 class=\"defeat\">☠ DERROTA</h3><p>La misión no queda bloqueada. Corrige el estado de la partida y vuelve a intentarlo.</p>';else e.innerHTML='<h3 class=\"victory\">⚔ VICTORIA</h3><p>Los tres sellos han sido destruidos y los héroes han alcanzado la salida. <b>Misión V desbloqueada.</b></p>'}"
-          new="function showResult(){const e=document.getElementById('resolution'),r=document.getElementById('victoryRewards');e.hidden=false;if(state.outcome==='defeat'){if(r)r.hidden=true;e.innerHTML='<h3 class=\"defeat\">☠ DERROTA</h3><p>La misión no queda bloqueada. Corrige el estado de la partida y vuelve a intentarlo.</p>';}else{if(r)r.hidden=false;const absolute=!!(state.hunter&&state.stake&&state.scroll&&state.explore);e.innerHTML=absolute?'<h3 class=\"victory\">✦ VICTORIA ABSOLUTA</h3><p>Los tres sellos han sido destruidos, los héroes han alcanzado la salida y se han completado todos los objetivos secundarios. <b>Misión V desbloqueada.</b></p>':'<h3 class=\"victory\">⚔ VICTORIA</h3><p>Los tres sellos han sido destruidos y los héroes han alcanzado la salida. <b>Misión V desbloqueada.</b></p>';}}"
-          if old not in s:
-              raise SystemExit('No se encontro showResult esperado')
-          s=s.replace(old,new,1)
+          reward='<div class="card"><small>✦ RECOMPENSAS DE VICTORIA</small><p>Cada héroe obtiene <b>30 Coronas</b> y <b>1 tirada en la tabla D66</b>. Se conservan la Estaca Bendita y el Pergamino Sagrado si fueron encontrados. <b>No se obtiene experiencia.</b></p></div>'
+          if reward in s:
+              s=s.replace(reward,reward.replace('<div class="card">','<div id="victoryRewards" class="card" hidden>'),1)
+          start=s.find('function showResult()')
+          end=s.find('function resetMissionTest()',start)
+          if start<0 or end<0:
+              raise SystemExit('No se pudo localizar showResult')
+          new="""function showResult(){const e=document.getElementById('resolution'),r=document.getElementById('victoryRewards');e.hidden=false;if(state.outcome==='defeat'){if(r)r.hidden=true;e.innerHTML='<h3 class=\"defeat\">☠ DERROTA</h3><p>La misión no queda bloqueada. Corrige el estado de la partida y vuelve a intentarlo.</p>';}else{if(r)r.hidden=false;const absolute=!!(state.hunter&&state.stake&&state.scroll&&state.explore);e.innerHTML=absolute?'<h3 class=\"victory\">✦ VICTORIA ABSOLUTA</h3><p>Los tres sellos han sido destruidos, los héroes han alcanzado la salida y se han completado todos los objetivos secundarios. <b>Misión V desbloqueada.</b></p>':'<h3 class=\"victory\">⚔ VICTORIA</h3><p>Los tres sellos han sido destruidos y los héroes han alcanzado la salida. <b>Misión V desbloqueada.</b></p>';}}"""
+          s=s[:start]+new+s[end:]
           p.write_text(s,encoding='utf-8')
           PY
       - name: Verificar
