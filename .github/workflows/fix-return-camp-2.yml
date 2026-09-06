@@ -1,0 +1,29 @@
+name: Aplicar regreso al campamento
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('mision3.html'); s=p.read_text()
+          old="<button onclick=\"location.href='index.html'\">← VOLVER AL CAMPAMENTO</button>"
+          new="<button onclick=\"location.href='index.html?camp=1'\">← VOLVER AL CAMPAMENTO</button>"
+          if old not in s: raise SystemExit('Botón M3 no encontrado')
+          p.write_text(s.replace(old,new,1))
+          p=Path('index.html'); s=p.read_text()
+          hook="<script>if(new URLSearchParams(location.search).get('camp')==='1'){if(localStorage.getItem('cruzadaCampaign')){showScreen('campaign')}else{showScreen('menu')}history.replaceState(null,'',location.pathname);}</script>"
+          if hook not in s: s=s.replace('</body>',hook+'</body>',1)
+          p.write_text(s)
+          PY
+          grep -F "index.html?camp=1" mision3.html
+          grep -F "get('camp')==='1'" index.html
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mision3.html index.html
+          git commit -m "Volver al campamento desde Misión III"
+          git push
