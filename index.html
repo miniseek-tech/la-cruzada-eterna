@@ -10,7 +10,7 @@
     const completed3=(c.completed||[]).includes(3)||Number(c.mission)>=4||(m3&&m3.resolved&&m3.outcome==='victory');
     if(completed3){
       const hub=document.getElementById('missionHubCard');
-      if(hub) hub.innerHTML='<small>MISIÓN III · COMPLETADA</small><h3>Los Patios de Kappelburg</h3><p>Los patios de Kappelburg han quedado atrás. La entrada a las criptas está abierta.</p><hr><small>MISIÓN IV · DISPONIBLE</small><h3>Las Criptas de la Sangre Negra</h3><p>Descended a las criptas y destruid los tres sellos antes de que el ritual concluya.</p><button class="hub-main-action" onclick="location.href='mision4.html'">⚔ COMENZAR / CONTINUAR MISIÓN IV</button>';
+      if(hub) hub.innerHTML='<small>MISIÓN III · COMPLETADA</small><h3>Los Patios de Kappelburg</h3><p>Los patios de Kappelburg han quedado atrás. La entrada a las criptas está abierta.</p><hr><small>MISIÓN IV · DISPONIBLE</small><h3>Las Criptas de la Sangre Negra</h3><p>Descended a las criptas y destruid los tres sellos antes de que el ritual concluya.</p><button class="hub-main-action" onclick="location.href=&quot;mision4.html&quot;">⚔ COMENZAR / CONTINUAR MISIÓN IV</button>';
     }
   };
   if(new URLSearchParams(location.search).get('camp')==='1'){
