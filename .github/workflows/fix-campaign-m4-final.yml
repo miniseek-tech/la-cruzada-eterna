@@ -1,0 +1,58 @@
+name: Corregir campamento Mision IV final
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-campaign-m4-final.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Aplicar correccion sin depender del codigo antiguo
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          tag='campaign-m4-hotfix'
+          if tag in s:
+              raise SystemExit(0)
+          patch='''<script id="campaign-m4-hotfix">
+          (function(){
+            const originalRenderSaved=renderSaved;
+            renderSaved=function(){
+              originalRenderSaved();
+              const c=campaign;
+              if(!c) return;
+              const completed3=(c.completed||[]).includes(3)||Number(c.mission)>=4;
+              if(completed3){
+                const hub=document.getElementById('missionHubCard');
+                if(hub) hub.innerHTML='<small>MISIÓN III · COMPLETADA</small><h3>Los Patios de Kappelburg</h3><p>Los patios de Kappelburg han quedado atrás. La entrada a las criptas está abierta.</p><hr><small>MISIÓN IV · DISPONIBLE</small><h3>Las Criptas de la Sangre Negra</h3><p>Descended a las criptas y destruid los tres sellos antes de que el ritual concluya.</p><button class="hub-main-action" onclick="location.href=\'mision4.html\'">⚔ COMENZAR / CONTINUAR MISIÓN IV</button>';
+              }
+            };
+            if(new URLSearchParams(location.search).get('camp')==='1'){
+              history.replaceState(null,'',location.pathname);
+              continueCampaign();
+            }
+          })();
+          </script>'''
+          if '</body>' not in s:
+              raise SystemExit('No se encontro cierre body')
+          s=s.replace('</body>',patch+'</body>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Verificar
+        run: |
+          grep -q 'campaign-m4-hotfix' index.html
+          grep -q 'mision4.html' index.html
+          grep -q 'MISIÓN IV · DISPONIBLE' index.html
+      - name: Publicar
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Mostrar Mision IV en el campamento'
+          git push
