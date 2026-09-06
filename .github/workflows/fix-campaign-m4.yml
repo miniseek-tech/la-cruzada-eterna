@@ -1,0 +1,56 @@
+name: Corregir campamento Mision IV
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/fix-campaign-m4.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Actualizar campamento y regreso
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          # El campamento antiguo considera M3 disponible cuando M2 esta completada.
+          old="<small>MISIÓN III · DISPONIBLE</small><h3>Los Patios de Kappelburg</h3><p>La compañía alcanza los patios interiores. Encontrad la entrada auténtica a las criptas y destruid a la Estatua Animada.</p><p><b>4 héroes · Nivel recomendado 3</b></p><button class=\"hub-main-action\" onclick=\"location.href=&quot;mision3.html&quot;\">⚔ COMENZAR / CONTINUAR MISIÓN III</button>"
+          new="<small>MISIÓN III · COMPLETADA</small><h3>Los Patios de Kappelburg</h3><p>Los patios de Kappelburg han quedado atrás. La entrada a las criptas está abierta.</p><hr><small>MISIÓN IV · DISPONIBLE</small><h3>Las Criptas de la Sangre Negra</h3><p>Descended a las criptas y destruid los tres sellos antes de que el ritual concluya.</p><button class=\"hub-main-action\" onclick=\"location.href=&quot;mision4.html&quot;\">⚔ COMENZAR / CONTINUAR MISIÓN IV</button>"
+          # Cambiar solo la rama que se muestra cuando la campaña ya esta en M4.
+          marker="const completed2=(c.completed||[]).includes(2);"
+          if marker not in s:
+              raise SystemExit('No se encontro la logica de progreso del campamento')
+          # Inserta una prioridad para M3 completada antes de la decision existente de M2.
+          target="const completed2=(c.completed||[]).includes(2);"
+          repl="const completed3=(c.completed||[]).includes(3)||c.mission>=4;const completed2=(c.completed||[]).includes(2);"
+          s=s.replace(target,repl,1)
+          # Localiza el HTML exacto de M3 y convierte la expresion que lo asigna en una condicion M4/M3.
+          if old not in s:
+              raise SystemExit('No se encontro el bloque visual actual de Mision III')
+          s=s.replace(old,"${completed3?`"+new+"`:`"+old+"`}",1)
+          # Si el reemplazo anterior queda dentro de un template literal, ${...} sera evaluado por renderSaved.
+          # Regreso directo desde las misiones al campamento.
+          tail="showScreen('menu');</script>"
+          if tail in s:
+              s=s.replace(tail,"showScreen('menu');if(new URLSearchParams(location.search).get('camp')==='1'){history.replaceState(null,'',location.pathname);continueCampaign();}</script>",1)
+          else:
+              raise SystemExit('No se encontro el arranque final de index')
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Comprobar cambios
+        run: |
+          grep -q 'mision4.html' index.html
+          grep -q 'completed3' index.html
+          grep -q "get('camp')==='1'" index.html
+      - name: Publicar correccion
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Corregir progreso M3 y acceso a Mision IV'
+          git push
