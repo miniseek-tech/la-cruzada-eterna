@@ -10,31 +10,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Corregir progreso Mision IV
+      - name: Corregir sintaxis del acceso a Mision IV
         run: |
           python - <<'PY'
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          old="""const completed3=(c.completed||[]).includes(3)||Number(c.mission)>=4||(m3&&m3.resolved&&m3.victory);"""
-          new="""const completed3=(c.completed||[]).includes(3)||Number(c.mission)>=4||(m3&&m3.resolved&&m3.outcome==='victory');"""
-          if new in s:
-              raise SystemExit(0)
+          old="""onclick=\"location.href='mision4.html'\""""
+          new="""onclick=\"location.href=&quot;mision4.html&quot;\""""
           if old not in s:
-              raise SystemExit('No se encontro la condicion antigua')
+              if new in s:
+                  raise SystemExit(0)
+              raise SystemExit('No se encontro el boton roto de Mision IV')
           s=s.replace(old,new,1)
           p.write_text(s,encoding='utf-8')
           PY
       - name: Verificar
         run: |
+          grep -q 'location.href=&quot;mision4.html&quot;' index.html
           grep -q "m3.outcome==='victory'" index.html
           grep -q 'MISIÓN IV · DISPONIBLE' index.html
-          grep -q 'mision4.html' index.html
       - name: Publicar
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add index.html
           git diff --cached --quiet && exit 0
-          git commit -m 'Corregir estado de victoria y desbloquear Mision IV'
+          git commit -m 'Reparar boton y desbloqueo de Mision IV'
           git push
