@@ -1,0 +1,48 @@
+name: Resolver premios D66
+on:
+  push:
+    paths:
+      - '.github/workflows/resolve-d66-reward-choices.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Añadir selección de premios D66
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('campamento-equipo.html')
+          s=p.read_text(encoding='utf-8')
+
+          s=s.replace('.magic-count{font-size:.78rem;color:#bca8d8}', '.magic-count{font-size:.78rem;color:#bca8d8}.reward-box{padding:12px;margin:8px 0;border:1px solid #8a6b34;border-radius:8px;background:rgba(62,43,17,.48)}.reward-box h4{margin:0 0 7px;color:#e3c474}.reward-box select{width:100%;padding:9px;background:#17110e;color:#eee;border:1px solid #66513b;border-radius:6px;margin:7px 0}.reward-box button{padding:9px 12px}.reward-note{font-size:.8rem;opacity:.8}')
+
+          old="function heroOptions(item){return campaign.heroes.map((h,hi)=>{const r=restrictionFor(h,item);return `<option value=\"${hi}\" ${r.ok?'':'disabled'}>${r.ok?'':'⛔ '}${esc(h.name)}${r.ok?'':' — '+esc(r.reason)}</option>`}).join('')}function render(){"
+          new="""function heroOptions(item){return campaign.heroes.map((h,hi)=>{const r=restrictionFor(h,item);return `<option value=\"${hi}\" ${r.ok?'':'disabled'}>${r.ok?'':'⛔ '}${esc(h.name)}${r.ok?'':' — '+esc(r.reason)}</option>`}).join('')}function rewardCandidates(kind){const all=Object.values(catalogByName);if(kind==='minorPotion')return all.filter(x=>x.category==='utiles'&&/poci[oó]n/i.test(x.name)&&!/mayor|gigante/i.test(x.name));if(kind==='majorPotion')return all.filter(x=>x.category==='utiles'&&/poci[oó]n/i.test(x.name)&&(/mayor|gigante/i.test(x.name)));if(kind==='minorMagic')return all.filter(x=>x.category==='magicos'&&x.magic&&Number.isFinite(x.price)&&x.price<=100);if(kind==='majorMagic')return all.filter(x=>x.category==='magicos'&&x.magic&&Number.isFinite(x.price)&&x.price>100);return[]}function rewardSelect(i,kind,count,title){const choices=rewardCandidates(kind);if(!choices.length)return `<div class=\"reward-box\"><h4>${esc(title)}</h4><p>No hay opciones válidas en el catálogo actual. El premio queda pendiente.</p></div>`;return `<div class=\"reward-box\"><h4>${esc(title)}</h4><div class=\"reward-note\">Elecciones pendientes: ${count}</div><select id=\"reward-${i}\">${choices.map(x=>`<option value=\"${esc(x.name)}\">${esc(x.name)}${Number.isFinite(x.price)?' · '+x.price+' coronas':''}</option>`).join('')}</select><button onclick=\"claimReward(${i},'${kind}')\">AÑADIR AL INVENTARIO</button></div>`}function rewardEditor(item,i){const s=String(item);let m=s.match(/^(\\d+)\\s+poci[oó]n(?:es|es)?\\s+menor/i)||s.match(/^(\\d+)\\s+poci[oó]nes\\s+menores/i);if(m)return rewardSelect(i,'minorPotion',Number(m[1]),`${m[1]} pociones menores a elegir`);m=s.match(/^(\\d+)\\s+poci[oó]n(?:es|es)?\\s+mayor/i)||s.match(/^(\\d+)\\s+poci[oó]nes\\s+mayores/i);if(m)return rewardSelect(i,'majorPotion',Number(m[1]),`${m[1]} pociones mayores o superiores a elegir`);if(/Objeto mágico menor a elegir/i.test(s))return rewardSelect(i,'minorMagic',1,'Objeto mágico menor a elegir (máx. 100 coronas)');if(/Objeto mágico mayor aleatorio/i.test(s))return `<div class=\"reward-box\"><h4>Objeto mágico mayor aleatorio</h4><button onclick=\"claimRandomMajorMagic(${i})\">🎲 OBTENER OBJETO ALEATORIO</button></div>`;if(/Hallazgo legendario/i.test(s))return rewardSelect(i,'majorMagic',1,'Hallazgo legendario · objeto mágico mayor a elegir');return''}function claimReward(i,kind){const sel=document.getElementById('reward-'+i);if(!sel||!sel.value)return;const chosen=sel.value;const marker=String(campaign.inventory[i]||'');let m=marker.match(/^(\\d+)/);let count=m?Number(m[1]):1;if(kind==='minorPotion'||kind==='majorPotion'){count--;if(count>0){campaign.inventory[i]=marker.replace(/^\\d+/,String(count))}else campaign.inventory.splice(i,1);campaign.inventory.push(chosen)}else{campaign.inventory.splice(i,1);campaign.inventory.push(chosen)}save();render();setEquipStatus(`${chosen} añadido al inventario como premio D66.`,'ok')}function claimRandomMajorMagic(i){const choices=rewardCandidates('majorMagic');if(!choices.length){setEquipStatus('No hay objetos mágicos mayores válidos en el catálogo.','error');return}const chosen=choices[Math.floor(Math.random()*choices.length)].name;campaign.inventory.splice(i,1);campaign.inventory.push(chosen);save();render();setEquipStatus(`${chosen} obtenido aleatoriamente y añadido al inventario.`,'ok')}function render(){"""
+          if old not in s:
+              raise SystemExit('No se encontró heroOptions/render')
+          s=s.replace(old,new)
+
+          s=s.replace("campaign.inventory.map((item,i)=>{const m=metaFor(item);", "campaign.inventory.map((item,i)=>{const reward=rewardEditor(item,i);if(reward)return reward;const m=metaFor(item);")
+
+          oldparse="return{name,price:pm?Number(pm[1]):null,level:lm?Number(lm[1]):0,magic:card.classList.contains('magic')||card.classList.contains('epic')||pane?.id==='magicos',category:pane?.id||''}"
+          newparse="return{name,price:pm?Number(pm[1]):null,level:lm?Number(lm[1]):0,magic:card.classList.contains('magic')||card.classList.contains('epic')||pane?.id==='magicos',category:pane?.id||'',tags:levelText,description:card.querySelector('p')?.textContent.trim()||''}"
+          if oldparse not in s:
+              raise SystemExit('No se encontró parser de catálogo')
+          s=s.replace(oldparse,newparse)
+
+          s=s.replace("const item=`${q} poción${q>1?'es':''} menor${q>1?'es':''} a elegir · Botín D66 ${roll}`", "const item=`${q} ${q===1?'poción menor':'pociones menores'} a elegir · Botín D66 ${roll}`")
+          s=s.replace("Obtienes <b>${q} poción${q>1?'es':''} menor${q>1?'es':''} a elegir</b>.", "Obtienes <b>${q} ${q===1?'poción menor':'pociones menores'} a elegir</b>.")
+          s=s.replace("const item=`${q} poción${q>1?'es':''} mayor${q>1?'es':''} o superior${q>1?'es':''} a elegir · Botín D66 ${roll}`", "const item=`${q} ${q===1?'poción mayor o superior':'pociones mayores o superiores'} a elegir · Botín D66 ${roll}`")
+          s=s.replace("Obtienes <b>${q} poción${q>1?'es':''} mayor${q>1?'es':''} o superior${q>1?'es':''} a elegir</b>.", "Obtienes <b>${q} ${q===1?'poción mayor o superior':'pociones mayores o superiores'} a elegir</b>.")
+
+          p.write_text(s,encoding='utf-8')
+      - name: Guardar cambios
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add campamento-equipo.html
+          git commit -m "Permitir elegir premios exactos del D66" || exit 0
+          git push
