@@ -1,0 +1,31 @@
+name: Corregir nueva campaña
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-new-campaign-reset.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Limpiar progreso antiguo al crear campaña
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          old="localStorage.setItem('cruzadaCampaign',JSON.stringify(campaign));mission={turn:1,tombs:[false,false,false],villager:false,necromancer:false,survivor:false,chest:false,resolved:false};localStorage.setItem('cruzadaMission1',JSON.stringify(mission));showScreen('campaign')}"
+          new="localStorage.setItem('cruzadaCampaign',JSON.stringify(campaign));['cruzadaMission2','cruzadaMission3','cruzadaMission4','cruzadaMission5'].forEach(k=>localStorage.removeItem(k));mission={turn:1,tombs:[false,false,false],villager:false,necromancer:false,survivor:false,chest:false,resolved:false};localStorage.setItem('cruzadaMission1',JSON.stringify(mission));showScreen('campaign')}"
+          if old not in s:
+              raise SystemExit('No se encontro el bloque createCampaign esperado')
+          p.write_text(s.replace(old,new,1))
+          PY
+      - name: Guardar cambio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Limpiar progreso antiguo al crear campaña" || exit 0
+          git push
