@@ -1,0 +1,28 @@
+name: Añadir coronas por enemigos
+on:
+  push:
+    paths:
+      - 'add-monster-gold.py'
+      - '.github/workflows/add-monster-gold.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python add-monster-gold.py
+      - name: Guardar cambio
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add campamento-equipo.html
+          if git diff --cached --quiet; then
+            echo 'Sin cambios'
+          else
+            git commit -m 'Añadir coronas manuales y botín por enemigos'
+            git push
+          fi
