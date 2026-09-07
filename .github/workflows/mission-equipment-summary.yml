@@ -1,0 +1,57 @@
+name: Resumen de equipo en misiones
+on:
+  push:
+    paths:
+      - '.github/workflows/mission-equipment-summary.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Integrar equipo en las misiones
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          shared = r'''(function(){
+function normMissionEquip(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+function missionEquipmentBonusFor(item){const n=normMissionEquip(item),o={M:0,F:0,A:0,I:0,CA:0,SALV:0};if(n.includes('armadura ligera'))o.SALV+=1;if(n.includes('armadura pesada'))o.SALV+=2;if(n==='escudo')o.SALV+=1;if(n.includes('espada / gran hacha / martillo a dos manos'))o.F+=2;if(n.includes('espada veloz'))o.A+=1;if(n.includes('martillo runico'))o.F+=1;if(n.includes('capa del viaje eterno')){o.M+=1;o.I+=1}if(n.includes('hacha runica de chrace'))o.F+=2;if(n.includes('manto del rey leon'))o.CA+=2;if(n.includes('escudo de athel loren'))o.CA+=1;return o}
+function missionEquipmentTotals(hero){const t={M:0,F:0,A:0,I:0,CA:0,SALV:0};for(const it of (Array.isArray(hero.equipment)?hero.equipment:[])){const b=missionEquipmentBonusFor(it);for(const k of Object.keys(t))t[k]+=b[k]||0}return t}
+function escMissionEquip(s){return String(s??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]))}
+window.renderMissionEquipmentSummary=function(containerId){const box=document.getElementById(containerId);if(!box)return;let c=null;try{c=JSON.parse(localStorage.getItem('cruzadaCampaign')||'null')}catch(e){}if(!c||!Array.isArray(c.heroes)){box.innerHTML='<p>No hay campaña activa.</p>';return}if(!document.getElementById('mission-equipment-style')){const st=document.createElement('style');st.id='mission-equipment-style';st.textContent='.mission-hero-equip{padding:10px;margin:7px 0;border:1px solid #554431;border-radius:8px;background:rgba(10,8,7,.45)}.mission-hero-equip b{color:#e3c474}.mission-equip-chip{display:inline-block;margin:4px 4px 0 0;padding:2px 7px;border:1px solid #765e35;border-radius:11px;font-size:.78rem}.mission-equip-items{font-size:.78rem;opacity:.82;margin-top:5px}.mission-equip-none{font-size:.78rem;opacity:.65;font-style:italic}';document.head.appendChild(st)}const labels={M:'M',F:'F',A:'A',I:'I',CA:'CA',SALV:'Salv.'};box.innerHTML=c.heroes.map(h=>{const t=missionEquipmentTotals(h),chips=Object.entries(t).filter(([,v])=>v).map(([k,v])=>'<span class="mission-equip-chip">'+labels[k]+' +'+v+'</span>').join(''),eq=Array.isArray(h.equipment)?h.equipment:[];return '<div class="mission-hero-equip"><b>'+escMissionEquip(h.name)+'</b> · '+escMissionEquip(h.owner||'')+' · Nivel '+(Number(h.level)||1)+'<div>'+(chips||'<span class="mission-equip-none">Sin modificadores directos.</span>')+'</div><div class="mission-equip-items">'+(eq.length?'Equipo: '+eq.map(escMissionEquip).join(' · '):'Sin equipo asignado.')+'</div></div>'}).join('')}
+})();'''
+          Path('mission-equipment-summary.js').write_text(shared,encoding='utf-8')
+
+          # Misión I (dentro de index.html)
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          if 'mission-equipment-summary.js' not in s:
+              s=s.replace('<script>const screens=', '<script src="mission-equipment-summary.js"></script><script>const screens=',1)
+          old="if(campaign)document.getElementById('missionParty').innerHTML=campaign.heroes.map(h=>`<p><b>${h.name}</b> · ${h.owner} · Nivel ${h.level||1}</p>`).join('');"
+          new="if(campaign){if(window.renderMissionEquipmentSummary)renderMissionEquipmentSummary('missionParty');else document.getElementById('missionParty').innerHTML=campaign.heroes.map(h=>`<p><b>${h.name}</b> · ${h.owner} · Nivel ${h.level||1}</p>`).join('');}"
+          if old in s:s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+
+          # Misiones II-V: añadir tarjeta de compañía, cargar script compartido y renderizarla al cargar.
+          for fn in ['mision2.html','mision3.html','mision4.html','mision5.html']:
+              p=Path(fn); s=p.read_text(encoding='utf-8')
+              if 'id="missionParty"' not in s:
+                  m=re.search(r'(<main><button[^>]*>.*?</button>)',s)
+                  if not m: raise SystemExit(f'No se encontró botón inicial en {fn}')
+                  card='<div class="card"><small>⚔ COMPAÑÍA DE HÉROES</small><div id="missionParty"></div></div>'
+                  s=s[:m.end()]+card+s[m.end():]
+              if 'mission-equipment-summary.js' not in s:
+                  s=s.replace('<script>', '<script src="mission-equipment-summary.js"></script><script>',1)
+              if "renderMissionEquipmentSummary('missionParty')" not in s:
+                  s=s.replace('function load(){',"function load(){renderMissionEquipmentSummary('missionParty');",1)
+              p.write_text(s,encoding='utf-8')
+          PY
+      - name: Guardar cambios
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add mission-equipment-summary.js index.html mision2.html mision3.html mision4.html mision5.html
+          git commit -m 'Mostrar equipo y bonificaciones dentro de las misiones' || exit 0
+          git push
