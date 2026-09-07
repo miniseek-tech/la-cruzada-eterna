@@ -1,0 +1,81 @@
+name: Enlazar fichas desde campamento
+on:
+  push:
+    paths:
+      - '.github/workflows/camp-hero-links.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Añadir enlaces directos a fichas
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          # index.html: botón VER FICHA en cada héroe del campamento + mapa de enlaces
+          p=Path('index.html')
+          s=p.read_text()
+          old="document.getElementById('savedParty').innerHTML=campaign.heroes.map(h=>`<div class=\"hero-hub\"><span class=\"level-badge\">NIVEL ${h.level}</span><b>${h.name}</b><small>Jugador: ${h.owner}</small><small>Experiencia: ${h.xp}</small></div>`).join('');"
+          new="document.getElementById('savedParty').innerHTML=campaign.heroes.map(h=>`<div class=\"hero-hub\"><span class=\"level-badge\">NIVEL ${h.level}</span><b>${h.name}</b><small>Jugador: ${h.owner}</small><small>Experiencia: ${h.xp}</small><button type=\"button\" style=\"margin-top:9px\" onclick=\"openCampaignHero('${h.name}')\">VER FICHA</button></div>`).join('');"
+          if old in s and 'function openCampaignHero(name)' not in s:
+              s=s.replace(old,new,1)
+              insert="""function openCampaignHero(name){
+  const n=(name||'').toLowerCase();
+  const direct=[
+    [['leonce'],'heroes.html','leonce'],
+    [['thibault'],'heroes.html','thibault'],
+    [['margot'],'heroes.html','margot'],
+    [['johan','johann'],'heroes.html','johann'],
+    [['otmar'],'heroes.html','otmar'],
+    [['konrad'],'heroes.html','konrad'],
+    [['korvath'],'heroes-altos-elfos.html','korvath'],
+    [['shelindrae'],'heroes-altos-elfos.html','shelindrae'],
+    [['dravenor'],'heroes-altos-elfos.html','dravenor'],
+    [['thalandir','thalendir'],'heroes-elfos-silvanos.html','thalendir'],
+    [['lyrien'],'heroes-elfos-silvanos.html','lyrien'],
+    [['shaltarion','syltharion'],'heroes-elfos-silvanos.html','syltharion'],
+    [['thorgar'],'heroes.html','thorgar'],
+    [['durgrom'],'heroes.html','durgrom'],
+    [['helka'],'heroes.html','helka']
+  ];
+  for(const [keys,page,id] of direct){if(keys.some(k=>n.includes(k))){location.href=page+'?hero='+encodeURIComponent(id);return}}
+  location.href='heroes.html';
+}
+"""
+              s=s.replace("function continueCampaign(){",insert+"function continueCampaign(){",1)
+              p.write_text(s)
+
+          # Página principal de héroes: abrir ficha indicada por ?hero=
+          p=Path('heroes.html')
+          s=p.read_text()
+          marker="</script></body></html>"
+          add="""const requestedHero=new URLSearchParams(location.search).get('hero');if(requestedHero){const factions={leonce:'bretonia',thibault:'bretonia',margot:'bretonia',johann:'imperio',otmar:'imperio',konrad:'imperio',thorgar:'enanos',durgrom:'enanos',helka:'enanos'};if(factions[requestedHero]&&document.getElementById(requestedHero))openHero(requestedHero,factions[requestedHero]);}
+"""
+          if 'const requestedHero=' not in s:
+              s=s.replace(marker,add+marker,1)
+              p.write_text(s)
+
+          # Altos Elfos
+          p=Path('heroes-altos-elfos.html')
+          s=p.read_text()
+          if 'const requestedHero=' not in s:
+              s=s.replace('</script></body></html>',"const requestedHero=new URLSearchParams(location.search).get('hero');if(requestedHero&&document.getElementById(requestedHero))openHero(requestedHero);</script></body></html>",1)
+              p.write_text(s)
+
+          # Elfos Silvanos
+          p=Path('heroes-elfos-silvanos.html')
+          s=p.read_text()
+          if 'const requestedHero=' not in s:
+              s=s.replace('</script></body></html>',"const requestedHero=new URLSearchParams(location.search).get('hero');if(requestedHero&&document.getElementById(requestedHero))openHero(requestedHero);</script></body></html>",1)
+              p.write_text(s)
+          PY
+      - name: Guardar cambios
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html heroes.html heroes-altos-elfos.html heroes-elfos-silvanos.html
+          git diff --cached --quiet || git commit -m "Enlazar fichas de héroes desde el campamento"
+          git push
