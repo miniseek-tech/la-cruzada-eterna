@@ -1,0 +1,31 @@
+name: Enlazar Elfos Silvanos
+on:
+  push:
+    paths:
+      - '.github/workflows/link-wood-elves.yml'
+jobs:
+  link:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enlazar pestaña
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('heroes.html')
+          s=p.read_text(encoding='utf-8')
+          old='<button class="locked">ELFOS SILVANOS</button>'
+          new='<button onclick="location.href=\'heroes-elfos-silvanos.html\'">ELFOS SILVANOS</button>'
+          if old not in s:
+              raise SystemExit('No se encontró el botón bloqueado de Elfos Silvanos')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Guardar cambio
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add heroes.html
+          git commit -m 'Enlazar Elfos Silvanos en Héroes'
+          git push
