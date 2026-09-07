@@ -1,0 +1,31 @@
+name: Enlazar Altos Elfos
+on:
+  push:
+    paths:
+      - '.github/workflows/link-high-elves.yml'
+permissions:
+  contents: write
+jobs:
+  link:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enlazar Altos Elfos
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('heroes.html')
+          s=p.read_text(encoding='utf-8')
+          old='<button class="locked">ALTOS ELFOS</button>'
+          new='<button onclick="location.href=\'heroes-altos-elfos.html\'">ALTOS ELFOS</button>'
+          if old not in s:
+              raise SystemExit('No se encontró el botón bloqueado de Altos Elfos')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Guardar cambio
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add heroes.html
+          git commit -m "Enlazar Altos Elfos en Héroes"
+          git push
