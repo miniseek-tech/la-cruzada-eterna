@@ -1,0 +1,37 @@
+name: Añadir resolución D66
+on:
+  push:
+    paths:
+      - '.github/workflows/add-d66-resolver.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Añadir resolvedor D66 al campamento
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('campamento-equipo.html')
+          s=p.read_text()
+          old='''<p class="note">Las tiradas D66 concedidas por las misiones quedan registradas aquí hasta que las resolváis con vuestra tabla de botín.</p><p><button onclick="location.href='equipo.html'">CONSULTAR CATÁLOGO DE EQUIPO</button></p>'''
+          new='''<p class="note">Las tiradas D66 concedidas por las misiones quedan registradas aquí hasta que las resolváis con vuestra tabla de botín.</p><p><button id="d66Button" onclick="resolveD66()">🎲 RESOLVER TIRADA D66</button></p><div id="d66Result" class="result" style="display:none;margin:10px 0;padding:12px;border:1px solid #765e35;border-radius:8px;background:rgba(52,37,17,.35)"></div><p><button onclick="location.href='equipo.html'">CONSULTAR CATÁLOGO DE EQUIPO</button></p>'''
+          if old not in s:
+              raise SystemExit('No se encontró el bloque D66 del campamento')
+          s=s.replace(old,new,1)
+          old2="""function removeEquipped(hi,ii){if(confirm('¿Eliminar este objeto del héroe?')){campaign.heroes[hi].equipment.splice(ii,1);save();render()}}load();"""
+          new2="""function removeEquipped(hi,ii){if(confirm('¿Eliminar este objeto del héroe?')){campaign.heroes[hi].equipment.splice(ii,1);save();render()}}function die(n){return 1+Math.floor(Math.random()*n)}function dice(n,s){let t=0;for(let i=0;i<n;i++)t+=die(s);return t}function resolveD66(){if(!campaign||!(campaign.pendingD66>0)){const e=document.getElementById('d66Result');e.style.display='block';e.innerHTML='<b>No hay tiradas D66 pendientes.</b>';return}const roll=die(6)*10+die(6);let text='';if(roll<=16){const g=dice(3,6);campaign.gold+=g;text=`<b>Resultado ${roll} · Bisutería barata</b><br>Obtienes <b>${g} coronas</b> (3D6).`;}else if(roll<=26){const g=dice(6,6);campaign.gold+=g;text=`<b>Resultado ${roll} · Objetos raros</b><br>Obtienes <b>${g} coronas</b> (6D6).`;}else if(roll<=35){const q=die(4);const item=`${q} poción${q>1?'es':''} menor${q>1?'es':''} a elegir · Botín D66 ${roll}`;campaign.inventory.push(item);text=`<b>Resultado ${roll} · Objetos infrecuentes</b><br>Obtienes <b>${q} poción${q>1?'es':''} menor${q>1?'es':''} a elegir</b>. Se ha añadido al inventario.`;}else if(roll<=42){const q=die(4);const item=`${q} poción${q>1?'es':''} mayor${q>1?'es':''} o superior${q>1?'es':''} a elegir · Botín D66 ${roll}`;campaign.inventory.push(item);text=`<b>Resultado ${roll} · Objetos excepcionales</b><br>Obtienes <b>${q} poción${q>1?'es':''} mayor${q>1?'es':''} o superior${q>1?'es':''} a elegir</b>. Se ha añadido al inventario.`;}else if(roll<=52){const item=`Objeto mágico menor a elegir (máx. 100 coronas) · Botín D66 ${roll}`;campaign.inventory.push(item);text=`<b>Resultado ${roll} · Objeto mágico menor</b><br>Elige <b>1 objeto mágico de valor máximo 100 coronas</b>. Queda registrado en el inventario.`;}else if(roll<=64){const g=dice(6,6)*10;campaign.gold+=g;text=`<b>Resultado ${roll} · Gran botín</b><br>Obtienes <b>${g} coronas</b> (6D6 × 10).`;}else if(roll===65){campaign.inventory.push('Objeto mágico mayor aleatorio (>100 coronas) · Botín D66 65');text='<b>Resultado 65 · Objeto mágico mayor</b><br>Obtienes <b>1 objeto mágico aleatorio de valor superior a 100 coronas</b>. Queda registrado en el inventario.';}else{campaign.inventory.push('Hallazgo legendario: objeto mágico mayor a elegir, sin límite de valor · Botín D66 66');text='<b>Resultado 66 · Hallazgo legendario</b><br>Obtienes <b>1 objeto mágico mayor a elegir, sin límite de valor</b>. Queda registrado en el inventario.';}campaign.pendingD66=Math.max(0,(campaign.pendingD66||0)-1);save();render();const e=document.getElementById('d66Result');e.style.display='block';e.innerHTML=text+`<br><small>Tiradas D66 pendientes: ${campaign.pendingD66}</small>`;}load();"""
+          if old2 not in s:
+              raise SystemExit('No se encontró el final del script de inventario')
+          s=s.replace(old2,new2,1)
+          p.write_text(s)
+          PY
+      - name: Guardar cambio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add campamento-equipo.html
+          git commit -m "Resolver tiradas D66 desde el campamento"
+          git push
