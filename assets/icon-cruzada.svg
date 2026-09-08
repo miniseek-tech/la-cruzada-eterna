@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="La Cruzada Eterna">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="35%" r="75%"><stop offset="0" stop-color="#233344"/><stop offset=".58" stop-color="#0a1118"/><stop offset="1" stop-color="#020304"/></radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0d08b"/><stop offset=".32" stop-color="#9c6c2f"/><stop offset=".62" stop-color="#f6dc9a"/><stop offset="1" stop-color="#68431d"/></linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7b161a"/><stop offset="1" stop-color="#230608"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="512" height="512" rx="88" fill="url(#bg)"/>
+  <rect x="13" y="13" width="486" height="486" rx="76" fill="none" stroke="url(#gold)" stroke-width="18"/>
+  <rect x="28" y="28" width="456" height="456" rx="64" fill="none" stroke="#4d3518" stroke-width="3"/>
+  <path d="M75 171C145 115 205 82 270 61" stroke="#d9321f" stroke-width="20" stroke-linecap="round" opacity=".5" filter="url(#glow)"/>
+  <path d="M70 211C151 148 211 110 282 84" stroke="#ff6a25" stroke-width="12" stroke-linecap="round" filter="url(#glow)"/>
+  <path d="M77 231C157 177 216 146 285 113" stroke="#ffb23d" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+  <circle cx="294" cy="92" r="20" fill="#ffd66a" filter="url(#glow)"/>
+  <path d="M256 92 395 137 374 355 256 433 138 355 117 137Z" fill="#0a0a0b" stroke="url(#gold)" stroke-width="16"/>
+  <path d="M256 111 377 151 359 343 256 410Z" fill="url(#red)"/>
+  <path d="M256 111 135 151 153 343 256 410Z" fill="#0c0d10"/>
+  <path d="M256 111V410" stroke="#8f642d" stroke-width="4" opacity=".8"/>
+  <circle cx="256" cy="151" r="42" fill="#111" stroke="url(#gold)" stroke-width="7"/>
+  <path d="M235 147a21 21 0 1 0 42 0c0-16-10-27-21-27s-21 11-21 27Zm7 27h28l-4 27h-20Z" fill="#d6b46e"/>
+  <circle cx="248" cy="148" r="5" fill="#050505"/><circle cx="264" cy="148" r="5" fill="#050505"/>
+  <path d="M145 319h222l-20 82H165Z" fill="#d7bc83" stroke="#6a4823" stroke-width="6"/>
+  <path d="M168 335h176" stroke="#755328" stroke-width="3"/>
+  <text x="256" y="366" text-anchor="middle" font-family="Georgia,serif" font-size="32" font-weight="700" fill="#140b08" letter-spacing="1">LA CRUZADA</text>
+  <text x="256" y="395" text-anchor="middle" font-family="Georgia,serif" font-size="27" font-weight="700" fill="#4b0b0d" letter-spacing="3">ETERNA</text>
+</svg>
