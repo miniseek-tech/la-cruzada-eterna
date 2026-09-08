@@ -4,7 +4,8 @@ if(window.__cruzadaBestiarioArtLoaded)return;
 window.__cruzadaBestiarioArtLoaded=true;
 const ART={
   'Nigromante':'./assets/nigromante-bestiario.webp?v=3',
-  'Esqueleto':'./assets/esqueleto-bestiario.jpg?v=1'
+  'Esqueleto':'./assets/esqueleto-bestiario.jpg?v=1',
+  'Esqueleto Arquero':'./assets/esqueleto-arquero-bestiario.webp?v=1'
 };
 function applyArt(){
   const content=document.getElementById('content');
