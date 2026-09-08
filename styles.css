@@ -16,3 +16,5 @@
 #magicos .items article:nth-child(39){order:999}#magicos .items article:nth-child(39) h3{background:linear-gradient(90deg,#3a3028,#211b17)}
 /* Armadura pesada: penalización de movimiento */
 #armaduras article.item:nth-of-type(2) .meta span:nth-child(2)::after{content:' · -1 Movimiento'}
+/* Espada Larga sin efecto adicional */
+#armas article.item:nth-of-type(3)>p{display:none}
