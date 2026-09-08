@@ -1,1 +1,19 @@
-{"name":"La Cruzada Eterna","short_name":"Cruzada Eterna","start_url":"./","display":"standalone","background_color":"#0c0908","theme_color":"#120b08","orientation":"portrait","description":"Aplicación compañera para La Cruzada Eterna"}
+{
+  "name": "La Cruzada Eterna",
+  "short_name": "Cruzada Eterna",
+  "description": "Aplicación de campaña para La Cruzada Eterna.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#050505",
+  "theme_color": "#090706",
+  "icons": [
+    {
+      "src": "assets/icon-cruzada.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
