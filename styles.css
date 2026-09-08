@@ -14,3 +14,5 @@
 #magicos .items article:nth-child(9),#magicos .items article:nth-child(31),#magicos .items article:nth-child(38),#magicos .items article:nth-child(43){order:400}#magicos .items article:nth-child(32){order:450}#magicos .items article:nth-child(34){order:500}#magicos .items article:nth-child(9) h3,#magicos .items article:nth-child(31) h3,#magicos .items article:nth-child(32) h3,#magicos .items article:nth-child(34) h3,#magicos .items article:nth-child(38) h3,#magicos .items article:nth-child(43) h3{background:linear-gradient(90deg,#6e3b82,#3b1d49);color:#f0d6ff}
 /* Sin coste indicado: al final, sin categoría */
 #magicos .items article:nth-child(39){order:999}#magicos .items article:nth-child(39) h3{background:linear-gradient(90deg,#3a3028,#211b17)}
+/* Armadura pesada: penalización de movimiento */
+#armaduras article.item:nth-of-type(2) .meta span:nth-child(2)::after{content:' · -1 Movimiento'}
