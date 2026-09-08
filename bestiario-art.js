@@ -3,7 +3,7 @@
 if(window.__cruzadaBestiarioArtLoaded)return;
 window.__cruzadaBestiarioArtLoaded=true;
 const ART={
-  'Nigromante':'./assets/nigromante-bestiario.webp'
+  'Nigromante':'https://raw.githubusercontent.com/miniseek-tech/la-cruzada-eterna/main/assets/nigromante-bestiario.webp?v=2'
 };
 function applyArt(){
   const content=document.getElementById('content');
@@ -26,6 +26,7 @@ function applyArt(){
   img.loading='eager';
   img.decoding='async';
   img.style.cssText='display:block;width:100%;height:auto;object-fit:cover';
+  img.onerror=function(){this.onerror=null;this.src='./assets/nigromante-bestiario.webp?v=2'};
   wrap.appendChild(img);
   const subtitle=content.querySelector('.hero-subtitle');
   if(subtitle)subtitle.insertAdjacentElement('afterend',wrap);else title.insertAdjacentElement('afterend',wrap);
