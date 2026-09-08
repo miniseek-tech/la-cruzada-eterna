@@ -1,4 +1,23 @@
 (function(){
+function launchCinematicIntro(){
+  if(document.getElementById('cruzadaIntro'))return;
+  const style=document.createElement('style');
+  style.id='cruzadaIntroStyle';
+  style.textContent=`#cruzadaIntro{position:fixed;inset:0;z-index:999999;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;opacity:1;transition:opacity .65s ease}#cruzadaIntro.intro-out{opacity:0;pointer-events:none}#cruzadaIntro video{width:100%;height:100%;object-fit:cover;background:#000}#cruzadaIntroSkip{position:absolute;top:max(18px,env(safe-area-inset-top));right:18px;z-index:2;border:1px solid rgba(230,205,150,.55);background:rgba(0,0,0,.42);color:#ead8ad;padding:8px 13px;border-radius:4px;font:600 12px Georgia,serif;letter-spacing:1.5px;cursor:pointer;backdrop-filter:blur(3px)}#cruzadaIntroTap{position:absolute;inset:0;z-index:1;display:none;align-items:center;justify-content:center;border:0;background:rgba(0,0,0,.28);color:#f0dfb8;font:700 15px Georgia,serif;letter-spacing:2px;text-shadow:0 2px 8px #000;cursor:pointer}#cruzadaIntroTap.show{display:flex}@media(min-width:800px){#cruzadaIntro video{object-fit:contain}}`;
+  document.head.appendChild(style);
+  const intro=document.createElement('div');intro.id='cruzadaIntro';
+  intro.innerHTML='<video id="cruzadaIntroVideo" playsinline preload="auto"><source src="assets/intro-cruzada-eterna.mp4" type="video/mp4"></video><button id="cruzadaIntroTap" aria-label="Reproducir introducción">TOCA PARA ENTRAR</button><button id="cruzadaIntroSkip" aria-label="Saltar introducción">SALTAR</button>';
+  document.body.appendChild(intro);document.body.style.overflow='hidden';
+  const video=document.getElementById('cruzadaIntroVideo'),tap=document.getElementById('cruzadaIntroTap'),skip=document.getElementById('cruzadaIntroSkip');let closing=false;
+  function closeIntro(){if(closing)return;closing=true;video.pause();intro.classList.add('intro-out');setTimeout(()=>{intro.remove();style.remove();document.body.style.overflow=''},680)}
+  video.addEventListener('ended',closeIntro);video.addEventListener('error',closeIntro);skip.addEventListener('click',closeIntro);
+  tap.addEventListener('click',()=>{tap.classList.remove('show');video.muted=false;video.currentTime=0;video.play().catch(()=>closeIntro())});
+  video.muted=false;const attempt=video.play();if(attempt&&attempt.catch)attempt.catch(()=>tap.classList.add('show'));
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',launchCinematicIntro,{once:true});else launchCinematicIntro();
+})();
+
+(function(){
 const menu=document.getElementById('menu');if(!menu)return;
 function campaign(){try{return JSON.parse(localStorage.getItem('cruzadaCampaign')||'null')}catch(e){return null}}
 window.openCurrentMission=function(){const c=campaign();if(!c){showScreen('campaignSetup');return}const mission=Math.max(1,Math.min(5,Number(c.mission)||1));if(mission===1)showScreen('mission1');else location.href='mision'+mission+'.html'}
