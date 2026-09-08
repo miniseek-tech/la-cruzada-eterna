@@ -49,3 +49,12 @@ function sync(){document.body.classList.toggle('menu-home',!menu.hidden)}sync();
   function applyHeroArt(){const el=document.querySelector('.gothic-tile.heroes .tile-art');if(!el)return;el.style.backgroundImage=`url("${art}")`;el.style.backgroundSize='cover';el.style.backgroundPosition='center 48%';el.style.backgroundRepeat='no-repeat'}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',applyHeroArt,{once:true});else applyHeroArt();
 })();
+
+(function(){
+  if(document.querySelector('script[data-cruzada-music]'))return;
+  const s=document.createElement('script');
+  s.src='ambient-music.js?v=1';
+  s.defer=true;
+  s.dataset.cruzadaMusic='1';
+  document.head.appendChild(s);
+})();
