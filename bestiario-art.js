@@ -5,7 +5,7 @@ window.__cruzadaBestiarioArtLoaded=true;
 const ART={
   'Nigromante':'./assets/nigromante-bestiario.webp?v=3',
   'Esqueleto':'./assets/esqueleto-bestiario.jpg?v=1',
-  'Esqueleto Arquero':'./assets/esqueleto-arquero-bestiario.jpg?v=2'
+  'Esqueleto Arquero':'./assets/esqueleto-arquero-bestiario.jpg?v=3'
 };
 function applyArt(){
   const content=document.getElementById('content');
@@ -13,7 +13,7 @@ function applyArt(){
   const title=content.querySelector('h2');
   if(!title)return;
   const name=(title.textContent||'').trim();
-  const src=(name==='Nigromante'&&window.__nigromanteInline)||ART[name];
+  const src=(name==='Nigromante'&&window.__nigromanteInline)||(name==='Esqueleto Arquero'&&window.__esqueletoArqueroInline)||ART[name];
   const old=content.querySelector('.enemy-art');
   if(!src){if(old)old.remove();return}
   if(old&&old.dataset.enemy===name)return;
