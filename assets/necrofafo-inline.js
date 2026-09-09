@@ -1,0 +1,1 @@
+window.__necrofafoInline='data:image/jpeg;base64,PLACEHOLDER';
