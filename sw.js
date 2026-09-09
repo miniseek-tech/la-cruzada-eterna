@@ -1,4 +1,4 @@
-const CACHE_NAME='cruzada-eterna-v17';
+const CACHE_NAME='cruzada-eterna-v18';
 const CORE=['./','./index.html','./styles.css','./menu-redesign.css','./menu-redesign.js','./ambient-music.js','./bestiario-art.js','./equipo-extra.js','./assets/nigromante-inline.js','./assets/esqueleto-arquero-inline.js','./assets/zombi-inline.js','./assets/necrofago-inline.js','./manifest.webmanifest','./assets/icon-cruzada.svg','./assets/nigromante-bestiario.webp','./assets/esqueleto-bestiario.jpg','./assets/esqueleto-arquero-bestiario.jpg'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
@@ -7,8 +7,8 @@ function injectMusic(response){
   const type=response.headers.get('content-type')||'';
   if(!type.includes('text/html'))return Promise.resolve(response);
   return response.text().then(html=>{
-    if(!html.includes('ambient-music.js'))html=html.replace(/<\/body>/i,'<script src="./ambient-music.js?v=6" data-cruzada-music="1"></script></body>');
-    else html=html.replace(/ambient-music\.js(?:\?v=\d+)?/ig,'ambient-music.js?v=6');
+    if(!html.includes('ambient-music.js'))html=html.replace(/<\/body>/i,'<script src="./ambient-music.js?v=7" data-cruzada-music="1"></script></body>');
+    else html=html.replace(/ambient-music\.js(?:\?v=\d+)?/ig,'ambient-music.js?v=7');
     if(!html.includes('nigromante-inline.js'))html=html.replace(/<\/body>/i,'<script src="./assets/nigromante-inline.js?v=1"></script></body>');
     if(!html.includes('esqueleto-arquero-inline.js'))html=html.replace(/<\/body>/i,'<script src="./assets/esqueleto-arquero-inline.js?v=1"></script></body>');
     if(!html.includes('zombi-inline.js'))html=html.replace(/<\/body>/i,'<script src="./assets/zombi-inline.js?v=1"></script></body>');
