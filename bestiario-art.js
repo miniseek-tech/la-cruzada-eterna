@@ -13,7 +13,7 @@ function applyArt(){
   const title=content.querySelector('h2');
   if(!title)return;
   const name=(title.textContent||'').trim();
-  const src=(name==='Nigromante'&&window.__nigromanteInline)||(name==='Esqueleto Arquero'&&window.__esqueletoArqueroInline)||ART[name];
+  const src=(name==='Nigromante'&&window.__nigromanteInline)||(name==='Esqueleto Arquero'&&window.__esqueletoArqueroInline)||(name==='Zombi'&&window.__zombiInline)||ART[name];
   const old=content.querySelector('.enemy-art');
   if(!src){if(old)old.remove();return}
   if(old&&old.dataset.enemy===name)return;
