@@ -1,0 +1,40 @@
+name: Add map button to main menu
+
+on:
+  push:
+    paths:
+      - '.github/workflows/add-map-menu-button.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Insert Mapa Imperial button
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          if "mapa-imperio.html" in s:
+              print('Mapa Imperial button already present')
+              raise SystemExit(0)
+          anchor = "<button onclick=\"location.href='dados.html?v=1'\"><span class=\"menu-icon\">⬡</span><b>DADOS</b><small>Tiradas</small></button>"
+          button = "<button onclick=\"location.href='mapa-imperio.html?v=2'\"><span class=\"menu-icon\">🗺</span><b>MAPA IMPERIAL</b><small>Tierras de Kappelburg</small></button>"
+          if anchor not in s:
+              raise SystemExit('Anchor for DADOS button not found; index left untouched')
+          p.write_text(s.replace(anchor, anchor + button, 1), encoding='utf-8')
+      - name: Commit change
+        run: |
+          if git diff --quiet; then
+            echo "No changes needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Añade Mapa Imperial al menú principal"
+          git push
