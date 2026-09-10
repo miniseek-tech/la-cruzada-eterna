@@ -5,8 +5,7 @@ window.__cruzadaBestiarioArtLoaded=true;
 const ART={
   'Nigromante':'./assets/nigromante-bestiario.webp?v=3',
   'Esqueleto':'./assets/esqueleto-bestiario.jpg?v=1',
-  'Esqueleto Arquero':'./assets/esqueleto-arquero-bestiario.jpg?v=3',
-  'Campeón Tumulario':'./assets/campeon-tumulario-bestiario.svg?v=1'
+  'Esqueleto Arquero':'./assets/esqueleto-arquero-bestiario.jpg?v=3'
 };
 let necrofagoLoading=false;
 function ensureNecrofagoArt(){
