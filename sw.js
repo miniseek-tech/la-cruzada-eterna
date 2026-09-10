@@ -1,4 +1,4 @@
-const CACHE_NAME='cruzada-eterna-v18';
+const CACHE_NAME='cruzada-eterna-v19';
 const CORE=['./','./index.html','./styles.css','./menu-redesign.css','./menu-redesign.js','./ambient-music.js','./bestiario-art.js','./equipo-extra.js','./assets/nigromante-inline.js','./assets/esqueleto-arquero-inline.js','./assets/zombi-inline.js','./assets/necrofago-inline.js','./manifest.webmanifest','./assets/icon-cruzada.svg','./assets/nigromante-bestiario.webp','./assets/esqueleto-bestiario.jpg','./assets/esqueleto-arquero-bestiario.jpg'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
@@ -13,14 +13,14 @@ function injectMusic(response){
     if(!html.includes('esqueleto-arquero-inline.js'))html=html.replace(/<\/body>/i,'<script src="./assets/esqueleto-arquero-inline.js?v=1"></script></body>');
     if(!html.includes('zombi-inline.js'))html=html.replace(/<\/body>/i,'<script src="./assets/zombi-inline.js?v=1"></script></body>');
     if(/necrofago-inline\.js(?:\?v=\d+)?/i.test(html)){
-      html=html.replace(/necrofago-inline\.js(?:\?v=\d+)?/ig,'necrofago-inline.js?v=2');
+      html=html.replace(/necrofago-inline\.js(?:\?v=\d+)?/ig,'necrofago-inline.js?v=5');
     }else{
-      html=html.replace(/<\/body>/i,'<script src="./assets/necrofago-inline.js?v=2"></script></body>');
+      html=html.replace(/<\/body>/i,'<script src="./assets/necrofago-inline.js?v=5"></script></body>');
     }
     if(/bestiario-art\.js(?:\?v=\d+)?/i.test(html)){
-      html=html.replace(/bestiario-art\.js(?:\?v=\d+)?/ig,'bestiario-art.js?v=11');
+      html=html.replace(/bestiario-art\.js(?:\?v=\d+)?/ig,'bestiario-art.js?v=12');
     }else{
-      html=html.replace(/<\/body>/i,'<script src="./bestiario-art.js?v=11"></script></body>');
+      html=html.replace(/<\/body>/i,'<script src="./bestiario-art.js?v=12"></script></body>');
     }
     if(!html.includes('equipo-extra.js'))html=html.replace(/<\/body>/i,'<script src="./equipo-extra.js?v=1"></script></body>');
     const headers=new Headers(response.headers);headers.delete('content-length');headers.delete('content-encoding');headers.set('content-type','text/html; charset=utf-8');
