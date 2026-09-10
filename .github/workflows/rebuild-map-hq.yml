@@ -1,0 +1,44 @@
+name: Publica mapa imperial HQ
+
+on:
+  push:
+    paths:
+      - '.github/workflows/rebuild-map-hq.yml'
+      - '.mapa-hq/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild-map-hq:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruir mapa HQ
+        shell: bash
+        run: |
+          cat .mapa-hq/part*.txt | tr -d '\n\r ' | base64 -d > assets/mapa-imperio-hq.jpg
+          test "$(wc -c < assets/mapa-imperio-hq.jpg)" -eq 47569
+          file assets/mapa-imperio-hq.jpg | grep -qi 'JPEG'
+      - name: Activar mapa HQ sin ampliarlo
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('mapa-imperio.html')
+          s=p.read_text()
+          s=s.replace('assets/mapa-imperio-final.webp?v=1','assets/mapa-imperio-hq.jpg?v=2')
+          s=s.replace('.map-scroll img{display:block;width:100%;height:auto;min-width:760px}', '.map-scroll img{display:block;width:1536px;max-width:none;height:auto;margin:0 auto}')
+          s=s.replace('.map-scroll img{min-width:900px}', '.map-scroll img{width:1536px;max-width:none}')
+          p.write_text(s)
+          PY
+      - name: Publicar mapa HQ
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/mapa-imperio-hq.jpg mapa-imperio.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Publica mapa imperial en alta resolucion'
+          git push
