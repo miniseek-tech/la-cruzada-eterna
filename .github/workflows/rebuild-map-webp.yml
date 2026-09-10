@@ -1,0 +1,33 @@
+name: Reconstruye mapa imperial WebP
+on:
+  push:
+    paths:
+      - '.github/workflows/rebuild-map-webp.yml'
+      - '.mapa-webp/**'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  rebuild-map:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruir y validar mapa
+        shell: bash
+        run: |
+          cat .mapa-webp/part*.txt | tr -d '\n\r ' | base64 -d > assets/mapa-imperio-final.webp
+          test "$(wc -c < assets/mapa-imperio-final.webp)" -eq 9644
+          file assets/mapa-imperio-final.webp | grep -qi 'Web/P'
+      - name: Actualizar página del mapa
+        shell: bash
+        run: |
+          sed -i 's#assets/mapa-imperio-cruzada-eterna.jpg?v=6#assets/mapa-imperio-final.webp?v=1#g' mapa-imperio.html
+      - name: Publicar mapa reconstruido
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/mapa-imperio-final.webp mapa-imperio.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Publica mapa imperial completo en WebP'
+          git push
