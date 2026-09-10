@@ -10,9 +10,9 @@
   "theme_color": "#090706",
   "icons": [
     {
-      "src": "assets/icon-cruzada.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "assets/file_00000000665481f9a155d066f6e50206.png",
+      "sizes": "1254x1254",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
