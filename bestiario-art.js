@@ -12,7 +12,7 @@ function ensureNecrofagoArt(){
   if(window.__necrofagoInline||necrofagoLoading)return;
   necrofagoLoading=true;
   const script=document.createElement('script');
-  script.src='./assets/necrofago-inline.js?v=4';
+  script.src='./assets/necrofago-inline.js?v=5';
   script.onload=()=>{necrofagoLoading=false;applyArt();};
   script.onerror=()=>{necrofagoLoading=false;};
   document.head.appendChild(script);
