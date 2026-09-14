@@ -1,1 +1,75 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1541" viewBox="0 0 1800 1541"><image href="mapa-posada2-alijo-olvidado.svg?v=2" x="0" y="0" width="1800" height="1541" preserveAspectRatio="xMidYMid meet"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1100" role="img" aria-labelledby="title desc">
+<title id="title">El Alijo Olvidado</title>
+<desc id="desc">Mapa cenital cuadriculado de una fortaleza subterránea de Enanos del Caos.</desc>
+<defs>
+  <radialGradient id="floor" cx="50%" cy="45%" r="75%"><stop offset="0" stop-color="#4a4034"/><stop offset=".55" stop-color="#29241f"/><stop offset="1" stop-color="#100e0c"/></radialGradient>
+  <linearGradient id="lava" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffda43"/><stop offset=".25" stop-color="#ff6a00"/><stop offset=".7" stop-color="#9d1300"/><stop offset="1" stop-color="#3e0500"/></linearGradient>
+  <linearGradient id="metal"><stop stop-color="#d7ae53"/><stop offset=".45" stop-color="#59401f"/><stop offset=".7" stop-color="#e1bb68"/><stop offset="1" stop-color="#392514"/></linearGradient>
+  <pattern id="stone" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="none"/><path d="M0 28h40l8-7h52M0 72h26l8 6h66M24 0v21M73 28v44M52 78v22" stroke="#84735e" stroke-opacity=".18" stroke-width="3"/></pattern>
+  <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M100 0H0V100" fill="none" stroke="#ead8ad" stroke-opacity=".84" stroke-width="3"/><path d="M6 0V100M0 6H100" stroke="#000" stroke-opacity=".35" stroke-width="2"/></pattern>
+  <filter id="glow"><feGaussianBlur stdDeviation="12" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="shadow"><feDropShadow dx="0" dy="9" stdDeviation="8" flood-color="#000" flood-opacity=".8"/></filter>
+</defs>
+<rect width="1600" height="1100" fill="#070606"/>
+<rect x="50" y="50" width="1500" height="1000" rx="20" fill="url(#floor)" stroke="#927246" stroke-width="12"/>
+<rect x="50" y="50" width="1500" height="1000" rx="20" fill="url(#stone)"/>
+
+<!-- outer walls and chambers -->
+<path d="M50 50h520v90H150v350h310v90H150v470H50zM1550 50h-520v90h420v350h-310v90h310v470h100z" fill="#151310" stroke="#725b3b" stroke-width="10"/>
+<path d="M150 150h300v330H150zM1150 150h300v330h-300z" fill="#342b22" stroke="#93724a" stroke-width="12"/>
+<path d="M150 620h300v300H150zM1150 620h300v300h-300z" fill="#30271f" stroke="#93724a" stroke-width="12"/>
+
+<!-- lava fissures -->
+<path d="M485 50l-38 135 55 95-46 130 35 120-54 155 48 125-34 140" fill="none" stroke="#401009" stroke-width="58"/>
+<path d="M485 50l-38 135 55 95-46 130 35 120-54 155 48 125-34 140" fill="none" stroke="url(#lava)" stroke-width="35" filter="url(#glow)"/>
+<path d="M1115 50l38 135-55 95 46 130-35 120 54 155-48 125 34 140" fill="none" stroke="#401009" stroke-width="58"/>
+<path d="M1115 50l38 135-55 95 46 130-35 120 54 155-48 125 34 140" fill="none" stroke="url(#lava)" stroke-width="35" filter="url(#glow)"/>
+
+<!-- rails from entrance to escape tunnel -->
+<g stroke="#1a120b" stroke-width="16" fill="none"><path d="M760 1050V760Q760 690 720 630V445Q720 370 770 320V50"/><path d="M840 1050V760Q840 690 880 630V445Q880 370 830 320V50"/></g>
+<g stroke="#b08042" stroke-width="8" fill="none"><path d="M760 1050V760Q760 690 720 630V445Q720 370 770 320V50"/><path d="M840 1050V760Q840 690 880 630V445Q880 370 830 320V50"/></g>
+<g stroke="#76522b" stroke-width="10">
+<path d="M740 990h120M740 930h120M740 870h120M740 810h120M742 750h116M725 690h150M705 625h190M700 560h200M700 495h200M710 430h180M730 365h140M750 300h100M750 235h100M750 170h100M750 105h100"/>
+</g>
+
+<!-- central hoard wagon -->
+<g filter="url(#shadow)">
+<rect x="620" y="380" width="360" height="270" rx="24" fill="#24170d" stroke="url(#metal)" stroke-width="18"/>
+<rect x="650" y="410" width="300" height="190" rx="12" fill="#684619" stroke="#c18e3f" stroke-width="8"/>
+<g fill="#e9bd49" stroke="#6d4514" stroke-width="5">
+<circle cx="690" cy="465" r="27"/><circle cx="755" cy="445" r="31"/><circle cx="820" cy="480" r="34"/><circle cx="890" cy="448" r="28"/><circle cx="720" cy="535" r="33"/><circle cx="790" cy="545" r="28"/><circle cx="860" cy="530" r="34"/><circle cx="920" cy="505" r="25"/>
+</g>
+<circle cx="670" cy="625" r="42" fill="#15110d" stroke="#ac7e3c" stroke-width="10"/><circle cx="930" cy="625" r="42" fill="#15110d" stroke="#ac7e3c" stroke-width="10"/>
+</g>
+
+<!-- pillars -->
+<g fill="#25221e" stroke="#806746" stroke-width="9" filter="url(#shadow)">
+<rect x="535" y="265" width="70" height="70" transform="rotate(45 570 300)"/><rect x="995" y="265" width="70" height="70" transform="rotate(45 1030 300)"/>
+<rect x="535" y="735" width="70" height="70" transform="rotate(45 570 770)"/><rect x="995" y="735" width="70" height="70" transform="rotate(45 1030 770)"/>
+</g>
+
+<!-- chamber props -->
+<g fill="#574024" stroke="#b18449" stroke-width="7" filter="url(#shadow)">
+<rect x="205" y="220" width="150" height="70"/><rect x="1245" y="220" width="150" height="70"/>
+<rect x="205" y="710" width="110" height="85"/><rect x="1285" y="710" width="110" height="85"/>
+</g>
+<g fill="#171513" stroke="#9c835b" stroke-width="8">
+<path d="M220 365h165l-35 45h-95z"/><path d="M1215 365h165l-35 45h-95z"/>
+</g>
+<g fill="#ff8a13" stroke="#4b1a08" stroke-width="8" filter="url(#glow)">
+<circle cx="260" cy="545" r="24"/><circle cx="1340" cy="545" r="24"/><circle cx="620" cy="720" r="24"/><circle cx="980" cy="720" r="24"/>
+</g>
+
+<!-- route markers -->
+<g font-family="Georgia,serif" text-anchor="middle" fill="#f0d69a" font-weight="700">
+<rect x="650" y="63" width="300" height="60" rx="22" fill="#0d0b09" stroke="#a47d45" stroke-width="5"/><text x="800" y="103" font-size="28">TÚNEL DE ESCAPE</text>
+<rect x="625" y="978" width="350" height="58" rx="22" fill="#0d0b09" stroke="#a47d45" stroke-width="5"/><text x="800" y="1017" font-size="28">ENTRADA DE HÉROES</text>
+<rect x="675" y="485" width="250" height="58" rx="20" fill="#120d08" fill-opacity=".9" stroke="#d0a24d" stroke-width="4"/><text x="800" y="524" font-size="30">EL ALIJO</text>
+<text x="300" y="190" font-size="24">FORJA ABANDONADA</text><text x="1300" y="190" font-size="24">ARSENAL</text>
+<text x="300" y="675" font-size="24">ALMACÉN</text><text x="1300" y="675" font-size="24">CAMPAMENTO</text>
+</g>
+
+<!-- grid last for readability -->
+<rect x="50" y="50" width="1500" height="1000" fill="url(#grid)" pointer-events="none"/>
+<rect x="50" y="50" width="1500" height="1000" rx="20" fill="none" stroke="#d2ae70" stroke-width="8"/>
+</svg>
