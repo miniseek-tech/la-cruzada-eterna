@@ -1,9 +1,9 @@
 /* Portada épica 2026-09-17: usa el arte subido como fondo sin sustituir los controles reales */
-body.menu-home .hero-header{background-image:linear-gradient(to bottom,rgba(3,3,3,.08) 0%,rgba(3,3,3,.10) 48%,rgba(3,3,3,.24) 100%),url('assets/file_00000000c7248211a64cc2bd28f343ef.png');background-size:cover;background-position:center 43%;background-repeat:no-repeat;min-height:520px;justify-content:flex-end;padding:250px 18px 30px}
-body.menu-home .hero-header:before{content:'';inset:0;background:linear-gradient(90deg,rgba(0,0,0,.38),transparent 20%,transparent 80%,rgba(0,0,0,.38));transform:none;filter:none}
+body.menu-home .hero-header{background-image:linear-gradient(to bottom,rgba(3,3,3,.08) 0%,rgba(3,3,3,.10) 48%,rgba(3,3,3,.24) 100%),url('assets/file_00000000c7248211a64cc2bd28f343ef.png');background-size:contain;background-position:center top;background-repeat:no-repeat;background-color:#050505;aspect-ratio:4/5;min-height:0;height:auto;justify-content:flex-end;padding:0}
+body.menu-home .hero-header:before{content:'';inset:0;background:none;transform:none;filter:none}
 /* El arte ya contiene escudo, título y lema: ocultamos las copias HTML para evitar duplicados. */
 body.menu-home .hero-header>.sigil,body.menu-home .hero-header>.eyebrow,body.menu-home .hero-header>h1,body.menu-home .hero-header>.ornament,body.menu-home .hero-header>.motto{display:none!important}
-/* Los rótulos AJUSTES/AYUDA ya están pintados en el arte. Los botones reales se vuelven invisibles y se colocan encima de esos rótulos: siguen siendo pulsables sin verse duplicados. */
-.gothic-utilities{top:-350px}
-.gothic-utilities button{background:transparent!important;border-color:transparent!important;box-shadow:none!important;color:transparent!important;text-shadow:none!important;opacity:0!important}
-@media(max-width:620px){body.menu-home .hero-header{min-height:430px;padding:205px 12px 24px;background-position:center 40%}.gothic-utilities{top:-285px}.gothic-utilities button{min-width:112px;min-height:112px}}
+/* Los rótulos AJUSTES/AYUDA ya están pintados en el arte. Los botones reales son áreas pulsables invisibles superpuestas. */
+.gothic-utilities{top:0;left:0;right:0;height:28%;align-items:flex-start;padding:7% 3% 0;pointer-events:none}
+.gothic-utilities button{pointer-events:auto;background:transparent!important;border-color:transparent!important;box-shadow:none!important;color:transparent!important;text-shadow:none!important;opacity:0!important;width:25%;height:70%;min-width:0!important;min-height:0!important;margin:0!important}
+@media(max-width:620px){body.menu-home .hero-header{background-size:contain;background-position:center top;aspect-ratio:4/5;min-height:0;height:auto;padding:0}.gothic-utilities{top:0;left:0;right:0;height:28%;padding:7% 3% 0}.gothic-utilities button{width:25%;height:70%;min-width:0!important;min-height:0!important}}
