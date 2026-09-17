@@ -3,5 +3,7 @@ body.menu-home .hero-header{background-image:linear-gradient(to bottom,rgba(3,3,
 body.menu-home .hero-header:before{content:'';inset:0;background:linear-gradient(90deg,rgba(0,0,0,.38),transparent 20%,transparent 80%,rgba(0,0,0,.38));transform:none;filter:none}
 /* El arte ya contiene escudo, título y lema: ocultamos las copias HTML para evitar duplicados. */
 body.menu-home .hero-header>.sigil,body.menu-home .hero-header>.eyebrow,body.menu-home .hero-header>h1,body.menu-home .hero-header>.ornament,body.menu-home .hero-header>.motto{display:none!important}
-.gothic-utilities{top:-508px}
-@media(max-width:620px){body.menu-home .hero-header{min-height:430px;padding:205px 12px 24px;background-position:center 40%}.gothic-utilities{top:-418px}}
+/* Los rótulos AJUSTES/AYUDA ya están pintados en el arte. Los botones reales se vuelven invisibles y se colocan encima de esos rótulos: siguen siendo pulsables sin verse duplicados. */
+.gothic-utilities{top:-350px}
+.gothic-utilities button{background:transparent!important;border-color:transparent!important;box-shadow:none!important;color:transparent!important;text-shadow:none!important;opacity:0!important}
+@media(max-width:620px){body.menu-home .hero-header{min-height:430px;padding:205px 12px 24px;background-position:center 40%}.gothic-utilities{top:-285px}.gothic-utilities button{min-width:112px;min-height:112px}}
