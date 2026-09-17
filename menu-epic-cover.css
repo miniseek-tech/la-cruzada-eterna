@@ -1,6 +1,7 @@
 /* Portada épica 2026-09-17: usa el arte subido como fondo sin sustituir los controles reales */
-body.menu-home .hero-header{background-image:linear-gradient(to bottom,rgba(3,3,3,.08) 0%,rgba(3,3,3,.18) 48%,rgba(3,3,3,.72) 100%),url('assets/file_00000000c7248211a64cc2bd28f343ef.png');background-size:cover;background-position:center 43%;background-repeat:no-repeat;min-height:520px;justify-content:flex-end;padding:250px 18px 30px}
+body.menu-home .hero-header{background-image:linear-gradient(to bottom,rgba(3,3,3,.08) 0%,rgba(3,3,3,.10) 48%,rgba(3,3,3,.24) 100%),url('assets/file_00000000c7248211a64cc2bd28f343ef.png');background-size:cover;background-position:center 43%;background-repeat:no-repeat;min-height:520px;justify-content:flex-end;padding:250px 18px 30px}
 body.menu-home .hero-header:before{content:'';inset:0;background:linear-gradient(90deg,rgba(0,0,0,.38),transparent 20%,transparent 80%,rgba(0,0,0,.38));transform:none;filter:none}
-body.menu-home .hero-header .sigil,body.menu-home .hero-header h1,body.menu-home .hero-header .ornament,body.menu-home .hero-header .motto{filter:drop-shadow(0 3px 5px #000)}
+/* El arte ya contiene escudo, título y lema: ocultamos las copias HTML para evitar duplicados. */
+body.menu-home .hero-header>.sigil,body.menu-home .hero-header>.eyebrow,body.menu-home .hero-header>h1,body.menu-home .hero-header>.ornament,body.menu-home .hero-header>.motto{display:none!important}
 .gothic-utilities{top:-508px}
 @media(max-width:620px){body.menu-home .hero-header{min-height:430px;padding:205px 12px 24px;background-position:center 40%}.gothic-utilities{top:-418px}}
