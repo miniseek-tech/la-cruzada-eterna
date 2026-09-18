@@ -31,7 +31,8 @@ const ART={
   'Garra Pico':'./assets/123facf3-a84e-409e-bed6-f14218da393e.png?v=1',
   'Estatua Animada':'./assets/5a859267-7f27-43b8-919a-628d51e55c4f.png?v=1',
   'Bandido':'./assets/43be35ce-5480-4f3f-b0ae-b7b48ee60322.png?v=1',
-  'Bandido Arquero':'./assets/bandido arquero.png?v=1'
+  'Bandido Arquero':'./assets/bandido arquero.png?v=1',
+  'Bruto':'./assets/file_0000000082888246826fe910d333855b.png?v=1'
 };
 function artFor(name){
   if(ART[name])return ART[name];
@@ -50,6 +51,7 @@ function artFor(name){
   if(n==='estatuaanimada')return './assets/5a859267-7f27-43b8-919a-628d51e55c4f.png?v=1';
   if(n==='bandido')return './assets/43be35ce-5480-4f3f-b0ae-b7b48ee60322.png?v=1';
   if(n==='bandidoarquero')return './assets/bandido arquero.png?v=1';
+  if(n==='bruto')return './assets/file_0000000082888246826fe910d333855b.png?v=1';
   return null;
 }
 function applyArt(){
