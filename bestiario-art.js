@@ -28,7 +28,8 @@ const ART={
   'Martillos Abismales':'./assets/a9059164-f0a4-4600-88d4-4af832d9b653.png?v=1',
   'Zharruk Quebrantahierro':'./assets/ChatGPT Image 18 sept 2026, 11_43_23.png?v=1',
   'Clakakr':'./assets/ChatGPT Image 18 sept 2026, 11_49_30.png?v=2',
-  'Garra Pico':'./assets/123facf3-a84e-409e-bed6-f14218da393e.png?v=1'
+  'Garra Pico':'./assets/123facf3-a84e-409e-bed6-f14218da393e.png?v=1',
+  'Estatua Animada':'./assets/5a859267-7f27-43b8-919a-628d51e55c4f.png?v=1'
 };
 function artFor(name){
   if(ART[name])return ART[name];
@@ -44,6 +45,7 @@ function artFor(name){
   if(n.includes('zharrukquebrantahierro'))return './assets/ChatGPT Image 18 sept 2026, 11_43_23.png?v=1';
   if(n==='clakakr')return './assets/ChatGPT Image 18 sept 2026, 11_49_30.png?v=2';
   if(n==='garrapico')return './assets/123facf3-a84e-409e-bed6-f14218da393e.png?v=1';
+  if(n==='estatuaanimada')return './assets/5a859267-7f27-43b8-919a-628d51e55c4f.png?v=1';
   return null;
 }
 function applyArt(){
