@@ -10,18 +10,26 @@ const ART={
   'Campeón Tumulario':'./assets/file_00000000facc824688830fb99173f787.png?v=1',
   'Rey Tumulario':'./assets/file_000000003b108210a46465153cbdfa6e.png?v=1',
   'Espectro':'./assets/file_000000001f7c8243bf4311918e08aeb4.png?v=1',
-  'Vaegulf':'./assets/f4b66599b5cbd759ac89a1c94d26a844.jpg?v=1',
+  'Vaegulf':'./assets/f4b66599b5cbd759ac89a1c94d26a844.jpg?v=2',
+  'Vargulf':'./assets/f4b66599b5cbd759ac89a1c94d26a844.jpg?v=2',
+  'Varghulf':'./assets/f4b66599b5cbd759ac89a1c94d26a844.jpg?v=2',
   'Enjambre de Murciélagos':'./assets/file_00000000ed1882108da17d8fe0bd521c.png?v=2',
   'Azharok el Imperecedero':'./assets/Screenshot_2026-09-17-22-15-32-735_com.miui.gallery-edit.jpg?v=1',
   'Varkhos':'./assets/file_0000000048c081f4813d1324508b560c.png?v=1'
 };
+function artFor(name){
+  if(ART[name])return ART[name];
+  const n=name.toLowerCase().replace(/[^a-záéíóúüñ]/g,'');
+  if(n.includes('vaegulf')||n.includes('vargulf')||n.includes('varghulf'))return './assets/f4b66599b5cbd759ac89a1c94d26a844.jpg?v=2';
+  return null;
+}
 function applyArt(){
   const content=document.getElementById('content');
   if(!content)return;
   const title=content.querySelector('h2');
   if(!title)return;
   const name=(title.textContent||'').trim();
-  const src=(name==='Nigromante'&&window.__nigromanteInline)||(name==='Esqueleto Arquero'&&window.__esqueletoArqueroInline)||(name==='Zombi'&&window.__zombiInline)||ART[name];
+  const src=(name==='Nigromante'&&window.__nigromanteInline)||(name==='Esqueleto Arquero'&&window.__esqueletoArqueroInline)||(name==='Zombi'&&window.__zombiInline)||artFor(name);
   const old=content.querySelector('.enemy-art');
   if(!src){if(old)old.remove();return}
   if(old&&old.dataset.enemy===name)return;
