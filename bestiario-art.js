@@ -6,27 +6,17 @@ const ART={
   'Nigromante':'./assets/nigromante-bestiario.webp?v=3',
   'Esqueleto':'./assets/esqueleto-bestiario.jpg?v=1',
   'Esqueleto Arquero':'./assets/esqueleto-arquero-bestiario.jpg?v=3',
+  'Necrófago':'./assets/file_00000000dc1481f4950a9034a57a671e.png?v=1',
   'Azharok el Imperecedero':'./assets/Screenshot_2026-09-17-22-15-32-735_com.miui.gallery-edit.jpg?v=1',
   'Varkhos':'./assets/file_0000000048c081f4813d1324508b560c.png?v=1'
 };
-let necrofagoLoading=false;
-function ensureNecrofagoArt(){
-  if(window.__necrofagoInline||necrofagoLoading)return;
-  necrofagoLoading=true;
-  const script=document.createElement('script');
-  script.src='./assets/necrofago-inline.js?v=5';
-  script.onload=()=>{necrofagoLoading=false;applyArt();};
-  script.onerror=()=>{necrofagoLoading=false;};
-  document.head.appendChild(script);
-}
 function applyArt(){
   const content=document.getElementById('content');
   if(!content)return;
   const title=content.querySelector('h2');
   if(!title)return;
   const name=(title.textContent||'').trim();
-  if(name==='Necrófago'&&!window.__necrofagoInline){ensureNecrofagoArt();return;}
-  const src=(name==='Nigromante'&&window.__nigromanteInline)||(name==='Esqueleto Arquero'&&window.__esqueletoArqueroInline)||(name==='Zombi'&&window.__zombiInline)||(name==='Necrófago'&&window.__necrofagoInline)||ART[name];
+  const src=(name==='Nigromante'&&window.__nigromanteInline)||(name==='Esqueleto Arquero'&&window.__esqueletoArqueroInline)||(name==='Zombi'&&window.__zombiInline)||ART[name];
   const old=content.querySelector('.enemy-art');
   if(!src){if(old)old.remove();return}
   if(old&&old.dataset.enemy===name)return;
