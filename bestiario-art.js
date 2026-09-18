@@ -15,6 +15,7 @@ const ART={
   'Varghulf':'./assets/f4b66599b5cbd759ac89a1c94d26a844.jpg?v=2',
   'Enjambre de Murciélagos':'./assets/file_00000000ed1882108da17d8fe0bd521c.png?v=2',
   'Enjambre de Ratas':'./assets/file_0000000034688210aaee6afca86471af.png?v=1',
+  'Lobo Espectral':'./assets/file_00000000aadc8246b73edc862f5c59da.png?v=1',
   'Azharok el Imperecedero':'./assets/Screenshot_2026-09-17-22-15-32-735_com.miui.gallery-edit.jpg?v=1',
   'Varkhos':'./assets/file_0000000048c081f4813d1324508b560c.png?v=1'
 };
