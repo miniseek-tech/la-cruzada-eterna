@@ -18,7 +18,8 @@ const ART={
   'Lobo Espectral':'./assets/file_00000000aadc8246b73edc862f5c59da.png?v=1',
   'Lobo Pútrido':'./assets/zombie_wolf_by_eedenartwork_dd03g83-pre.jpg?v=1',
   'Azharok el Imperecedero':'./assets/Screenshot_2026-09-17-22-15-32-735_com.miui.gallery-edit.jpg?v=1',
-  'Varkhos':'./assets/file_0000000048c081f4813d1324508b560c.png?v=1'
+  'Varkhos':'./assets/file_0000000048c081f4813d1324508b560c.png?v=1',
+  'Corsario Elfo Oscuro':'./assets/file_00000000b22881f4a6fd6919ff13f207.png?v=1'
 };
 function artFor(name){
   if(ART[name])return ART[name];
