@@ -21,7 +21,8 @@ const ART={
   'Varkhos':'./assets/file_0000000048c081f4813d1324508b560c.png?v=1',
   'Corsario Elfo Oscuro':'./assets/file_00000000b22881f4a6fd6919ff13f207.png?v=1',
   'Ballestero de Repetición':'./assets/ChatGPT Image 18 sept 2026, 10_29_09.png?v=1',
-  'Elfa Bruja de Hag Graef':'./assets/a0ee9a2e-b59c-41ea-9db2-dc1fd25f7330.png?v=1'
+  'Elfa Bruja de Hag Graef':'./assets/a0ee9a2e-b59c-41ea-9db2-dc1fd25f7330.png?v=1',
+  'Draelith Garra Sombría':'./assets/ChatGPT Image 18 sept 2026, 10_49_23.png?v=1'
 };
 function artFor(name){
   if(ART[name])return ART[name];
@@ -30,6 +31,7 @@ function artFor(name){
   if(n.includes('lobopútrido')||n.includes('loboputrido'))return './assets/zombie_wolf_by_eedenartwork_dd03g83-pre.jpg?v=1';
   if(n.includes('ballesteroderepetición')||n.includes('ballesteroderepeticion')||n.includes('ballesteroelfooscuro'))return './assets/ChatGPT Image 18 sept 2026, 10_29_09.png?v=1';
   if((n.includes('elfabruja')||n.includes('brujaelfa'))&&n.includes('haggraef'))return './assets/a0ee9a2e-b59c-41ea-9db2-dc1fd25f7330.png?v=1';
+  if(n.includes('draelith')&&(n.includes('garrasombría')||n.includes('garrasombria')))return './assets/ChatGPT Image 18 sept 2026, 10_49_23.png?v=1';
   return null;
 }
 function applyArt(){
