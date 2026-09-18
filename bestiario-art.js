@@ -24,7 +24,8 @@ const ART={
   'Elfa Bruja de Hag Graef':'./assets/a0ee9a2e-b59c-41ea-9db2-dc1fd25f7330.png?v=1',
   'Draelith Garra Sombría':'./assets/ChatGPT Image 18 sept 2026, 10_49_23.png?v=1',
   'Enano del Caos':'./assets/file_00000000eab482108f5688e903ac2ad6.png?v=1',
-  'Ballestero Enano del Caos':'./assets/file_000000007c8882108cc12e8024bf0330.png?v=1'
+  'Ballestero Enano del Caos':'./assets/file_000000007c8882108cc12e8024bf0330.png?v=1',
+  'Martillos Abismales':'./assets/a9059164-f0a4-4600-88d4-4af832d9b653.png?v=1'
 };
 function artFor(name){
   if(ART[name])return ART[name];
@@ -36,6 +37,7 @@ function artFor(name){
   if(n.includes('draelith')&&(n.includes('garrasombría')||n.includes('garrasombria')))return './assets/ChatGPT Image 18 sept 2026, 10_49_23.png?v=1';
   if(n==='enanodelcaos')return './assets/file_00000000eab482108f5688e903ac2ad6.png?v=1';
   if(n.includes('ballesteroenanodelcaos'))return './assets/file_000000007c8882108cc12e8024bf0330.png?v=1';
+  if(n.includes('martillosabismales'))return './assets/a9059164-f0a4-4600-88d4-4af832d9b653.png?v=1';
   return null;
 }
 function applyArt(){
