@@ -19,13 +19,15 @@ const ART={
   'Lobo Pútrido':'./assets/zombie_wolf_by_eedenartwork_dd03g83-pre.jpg?v=1',
   'Azharok el Imperecedero':'./assets/Screenshot_2026-09-17-22-15-32-735_com.miui.gallery-edit.jpg?v=1',
   'Varkhos':'./assets/file_0000000048c081f4813d1324508b560c.png?v=1',
-  'Corsario Elfo Oscuro':'./assets/file_00000000b22881f4a6fd6919ff13f207.png?v=1'
+  'Corsario Elfo Oscuro':'./assets/file_00000000b22881f4a6fd6919ff13f207.png?v=1',
+  'Ballestero de Repetición':'./assets/ChatGPT Image 18 sept 2026, 10_29_09.png?v=1'
 };
 function artFor(name){
   if(ART[name])return ART[name];
   const n=name.toLowerCase().replace(/[^a-záéíóúüñ]/g,'');
   if(n.includes('vaegulf')||n.includes('vargulf')||n.includes('varghulf'))return './assets/f4b66599b5cbd759ac89a1c94d26a844.jpg?v=2';
   if(n.includes('lobopútrido')||n.includes('loboputrido'))return './assets/zombie_wolf_by_eedenartwork_dd03g83-pre.jpg?v=1';
+  if(n.includes('ballesteroderepetición')||n.includes('ballesteroderepeticion')||n.includes('ballesteroelfooscuro'))return './assets/ChatGPT Image 18 sept 2026, 10_29_09.png?v=1';
   return null;
 }
 function applyArt(){
