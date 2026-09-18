@@ -26,7 +26,8 @@ const ART={
   'Enano del Caos':'./assets/file_00000000eab482108f5688e903ac2ad6.png?v=1',
   'Ballestero Enano del Caos':'./assets/file_000000007c8882108cc12e8024bf0330.png?v=1',
   'Martillos Abismales':'./assets/a9059164-f0a4-4600-88d4-4af832d9b653.png?v=1',
-  'Zharruk Quebrantahierro':'./assets/ChatGPT Image 18 sept 2026, 11_43_23.png?v=1'
+  'Zharruk Quebrantahierro':'./assets/ChatGPT Image 18 sept 2026, 11_43_23.png?v=1',
+  'Clakakr':'./assets/ChatGPT Image 18 sept 2026, 11_49_30.png?v=2'
 };
 function artFor(name){
   if(ART[name])return ART[name];
@@ -40,6 +41,7 @@ function artFor(name){
   if(n.includes('ballesteroenanodelcaos'))return './assets/file_000000007c8882108cc12e8024bf0330.png?v=1';
   if(n.includes('martillosabismales'))return './assets/a9059164-f0a4-4600-88d4-4af832d9b653.png?v=1';
   if(n.includes('zharrukquebrantahierro'))return './assets/ChatGPT Image 18 sept 2026, 11_43_23.png?v=1';
+  if(n==='clakakr')return './assets/ChatGPT Image 18 sept 2026, 11_49_30.png?v=2';
   return null;
 }
 function applyArt(){
