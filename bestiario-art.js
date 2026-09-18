@@ -8,6 +8,7 @@ const ART={
   'Esqueleto Arquero':'./assets/esqueleto-arquero-bestiario.jpg?v=3',
   'Necrófago':'./assets/file_00000000dc1481f4950a9034a57a671e.png?v=1',
   'Campeón Tumulario':'./assets/file_00000000facc824688830fb99173f787.png?v=1',
+  'Espectro':'./assets/file_000000001f7c8243bf4311918e08aeb4.png?v=1',
   'Azharok el Imperecedero':'./assets/Screenshot_2026-09-17-22-15-32-735_com.miui.gallery-edit.jpg?v=1',
   'Varkhos':'./assets/file_0000000048c081f4813d1324508b560c.png?v=1'
 };
