@@ -1,0 +1,38 @@
+name: Mejorar resolución D66
+on:
+  push:
+    paths:
+      - '.github/workflows/d66-inline-rewards.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Mostrar y resolver el premio junto a la tirada D66
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('campamento-equipo.html')
+          s=p.read_text(encoding='utf-8')
+          old='<div id="d66Result" class="result" style="display:none;margin:10px 0;padding:12px;border:1px solid #765e35;border-radius:8px;background:rgba(52,37,17,.35)"></div>'
+          if 'id="d66RewardInline"' not in s:
+              if old not in s: raise SystemExit('No se encontró d66Result')
+              s=s.replace(old,old+'<div id="d66RewardInline" style="margin:10px 0"></div>',1)
+          marker='function rewardEditor(item,i){'
+          helper="""function renderLatestD66Reward(){const box=document.getElementById('d66RewardInline');if(!box)return;const candidates=campaign.inventory.map((item,i)=>({item,i})).filter(x=>/Botín D66|Hallazgo legendario|Objeto mágico (menor|mayor)|poci[oó]n/i.test(String(x.item)));if(!candidates.length){box.innerHTML='';return}const x=candidates[candidates.length-1];const editor=rewardEditor(x.item,x.i);box.innerHTML=editor?'<div class=\"reward-note\"><b>RESOLVER PREMIO DE ESTA TIRADA</b></div>'+editor:''}function refreshD66Inline(){setTimeout(renderLatestD66Reward,0)}"""
+          if 'function renderLatestD66Reward()' not in s:
+              if marker not in s: raise SystemExit('No se encontró rewardEditor')
+              s=s.replace(marker,helper+marker,1)
+          target="document.getElementById('pendingD66').textContent=campaign.pendingD66;"
+          if target in s and 'refreshD66Inline();' not in s[s.find(target):s.find(target)+180]:
+              s=s.replace(target,target+'refreshD66Inline();',1)
+          p.write_text(s,encoding='utf-8')
+      - name: Guardar cambios
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add campamento-equipo.html
+          git commit -m "Resolver premios D66 junto a la tirada" || exit 0
+          git push
