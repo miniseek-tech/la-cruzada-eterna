@@ -1,0 +1,32 @@
+name: Update Mission II exploration reward
+on:
+  push:
+    paths:
+      - '.github/workflows/update-mission2-exploration.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace exploration result 6
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('mision2.html')
+          s=p.read_text()
+          old='Objeto raro: roba una carta de objeto o determina uno aleatorio.'
+          new='Hallazgo excepcional: obtienes 1 objeto mágico o 1 runa menor al azar de valor inferior a 100 coronas.'
+          if old not in s:
+              raise SystemExit('Texto antiguo no encontrado')
+          s=s.replace(old,new)
+          p.write_text(s)
+          PY
+      - name: Commit change
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add mision2.html
+          git diff --cached --quiet || git commit -m 'Balance Mission II exploration result 6'
+          git push
