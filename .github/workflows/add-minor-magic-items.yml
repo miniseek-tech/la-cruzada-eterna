@@ -1,0 +1,33 @@
+name: Añadir objetos mágicos menores
+on:
+  push:
+    paths:
+      - '.github/workflows/add-minor-magic-items.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Añadir seis objetos al catálogo mágico
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('equipo.html')
+          s=p.read_text(encoding='utf-8')
+          marker='<div id="magicos" class="pane"><p class="section-kicker">RELIQUIAS Y ARTEFACTOS</p><h2>Objetos mágicos</h2><div class="items">'
+          if marker not in s:
+              raise SystemExit('No se encontró la sección de objetos mágicos')
+          if 'Piedra de Afilar Encantada' in s:
+              raise SystemExit('Los objetos ya están añadidos')
+          items='''<article class="item magic"><h3>Piedra de Afilar Encantada</h3><div class="meta"><span class="price">75 coronas</span><span>Menor</span></div><p>1 vez por partida, antes de atacar, uno de tus ataques obtiene PA −1.</p></article><article class="item magic"><h3>Broche de Hierro Bendecido</h3><div class="meta"><span class="price">75 coronas</span><span>Talismán · Menor</span></div><p>1 vez por partida, puedes repetir una tirada de Salvación por armadura fallida.</p></article><article class="item magic"><h3>Botas del Caminante</h3><div class="meta"><span class="price">75 coronas</span><span>Equipo mágico · Menor</span></div><p>1 vez por partida, obtienes +2 M durante tu turno.</p></article><article class="item magic"><h3>Amuleto del Ojo de Halcón</h3><div class="meta"><span class="price">75 coronas</span><span>Talismán · Menor</span></div><p>1 vez por partida, obtienes +1 HP para un único ataque a distancia.</p></article><article class="item magic"><h3>Guantelete del Duelista</h3><div class="meta"><span class="price">75 coronas</span><span>Equipo mágico · Menor</span></div><p>1 vez por partida, obtienes +1 HA para un único ataque cuerpo a cuerpo.</p></article><article class="item magic"><h3>Púas Metálicas de Mithril</h3><div class="meta"><span class="price">75 coronas</span><span>Munición · Menor</span></div><p>1 vez por partida, tus flechas, virotes o munición obtienen +1 Fuerza para un único ataque a distancia.</p></article>'''
+          s=s.replace(marker,marker+items,1)
+          p.write_text(s,encoding='utf-8')
+      - name: Guardar cambios
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add equipo.html
+          git commit -m "Añadir seis objetos mágicos menores" || exit 0
+          git push
